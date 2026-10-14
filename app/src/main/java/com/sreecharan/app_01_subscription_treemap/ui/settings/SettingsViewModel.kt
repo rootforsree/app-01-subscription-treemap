@@ -1,0 +1,44 @@
+package com.sreecharan.app_01_subscription_treemap.ui.settings
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sreecharan.app_01_subscription_treemap.data.datastore.SettingsRepository
+import com.sreecharan.app_01_subscription_treemap.data.model.ThemeMode
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val settingsRepository: SettingsRepository,
+) : ViewModel() {
+
+    val uiState: StateFlow<SettingsUiState> field = settingsRepository.settings
+        .map { settings ->
+            SettingsUiState(
+                themeMode = settings.themeMode,
+                hapticsEnabled = settings.hapticsEnabled,
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = SettingsUiState(),
+        )
+
+    fun onThemeModeSelected(mode: ThemeMode) {
+        viewModelScope.launch {
+            settingsRepository.setThemeMode(mode)
+        }
+    }
+
+    fun onHapticsToggled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setHapticsEnabled(enabled)
+        }
+    }
+}
