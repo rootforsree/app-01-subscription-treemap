@@ -19,18 +19,6 @@ plugins {
 val versionCodeProp = providers.gradleProperty("versionCode").getOrElse("1").toInt()
 val versionNameProp = providers.gradleProperty("versionName").getOrElse("1.0.0-dev")
 
-signingConfigs {
-    create("release") {
-        val keystorePath = System.getenv("KEYSTORE_PATH")
-        if (!keystorePath.isNullOrBlank()) {
-            storeFile = file(keystorePath)
-            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("ANDROID_KEY_ALIAS")
-            keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
-        }
-    }
-}
-
 extensions.configure<ApplicationExtension> {
     namespace = "com.sreecharan.app_01_subscription_treemap"
 
@@ -39,6 +27,20 @@ extensions.configure<ApplicationExtension> {
         targetSdk = 36
         versionCode = versionCodeProp
         versionName = versionNameProp
+    }
+
+    // NOTE: signingConfigs must live inside the android extension. At the top
+    // level of a Kotlin DSL script the name does not resolve (AGP 9).
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("KEYSTORE_PATH")
+            if (!keystorePath.isNullOrBlank()) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
