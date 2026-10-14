@@ -2,14 +2,67 @@
 <resources>
     <string name="app_name">Subscription Treemap</string>
 
-    <string name="tab_home">Home</string>
+    <string name="tab_subscriptions">Subscriptions</string>
+    <string name="tab_hikes">Price Hikes</string>
+    <string name="tab_hikes_badge">Price Hikes (%1$d)</string>
     <string name="tab_settings">Settings</string>
     <string name="tab_about">About</string>
 
-    <string name="home_title">Home</string>
-    <string name="home_empty_message">No notes yet</string>
-    <string name="action_refresh">Refresh</string>
+    <string name="home_title">Subscriptions</string>
+    <string name="summary_per_month">Total per month</string>
+    <string name="summary_per_year">≈ %1$s per year</string>
+    <string name="per_month_short">%1$s/mo</string>
+    <string name="hikes_banner">%1$d price hikes detected</string>
+    <string name="hikes_banner_cta">Review</string>
+    <string name="filter_all">All</string>
+    <string name="empty_title">No subscriptions yet</string>
+    <string name="empty_message">Add your first subscription and watch your spending as a treemap.</string>
+    <string name="empty_filtered">No subscriptions in this category</string>
+    <string name="action_add_subscription">Add subscription</string>
+    <string name="home_error_message">Couldn\'t load your subscriptions. Check your connection and try again.</string>
     <string name="action_retry">Retry</string>
+
+    <string name="editor_title_add">New subscription</string>
+    <string name="editor_title_edit">Edit subscription</string>
+    <string name="field_name">Name</string>
+    <string name="field_amount">Amount</string>
+    <string name="field_cycle">Billing cycle</string>
+    <string name="field_category">Category</string>
+    <string name="field_next_billing">Next billing</string>
+    <string name="field_notes">Notes (optional)</string>
+    <string name="pick_date">Pick a date</string>
+    <string name="currency_symbol" translatable="false">$</string>
+    <string name="action_done">Done</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_edit">Edit</string>
+    <string name="delete_title">Delete %1$s?</string>
+    <string name="delete_message">This cannot be undone.</string>
+    <string name="error_name_blank">Enter a name</string>
+    <string name="error_amount_invalid">Enter an amount above $0</string>
+
+    <string name="detail_cost">Cost</string>
+    <string name="detail_monthly">Monthly equivalent</string>
+    <string name="detail_yearly">Yearly</string>
+    <string name="detail_next_billing">Next billing</string>
+    <string name="detail_notes">Notes</string>
+    <string name="detail_cost_value">%1$s / %2$s</string>
+    <string name="detail_hike_increase">Price increased from %1$s to %2$s (+%3$s)</string>
+    <string name="noun_week">week</string>
+    <string name="noun_month">month</string>
+    <string name="noun_quarter">quarter</string>
+    <string name="noun_year">year</string>
+    <string name="date_none">—</string>
+
+    <string name="hikes_title">Price Hikes</string>
+    <string name="hike_row">%1$s → %2$s / mo · +%3$s</string>
+    <string name="hike_detected">detected %1$s</string>
+    <string name="hikes_empty_title">No price hikes</string>
+    <string name="hikes_empty_message">Your prices are holding steady.</string>
+    <string name="action_acknowledge">Acknowledge</string>
+    <string name="action_acknowledge_all">Acknowledge all</string>
+    <string name="snack_hike_recorded">Price hike recorded</string>
 
     <string name="settings_title">Settings</string>
     <string name="section_appearance">Appearance</string>

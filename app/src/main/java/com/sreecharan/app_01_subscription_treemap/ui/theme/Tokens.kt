@@ -116,6 +116,7 @@ object AppDimens {
     val rowVerticalPadding: Dp = 8.dp
     val tabBarHeight: Dp = 56.dp
     val tabBarClearance: Dp = 88.dp
+    val chipHeight: Dp = 44.dp
     val iconSize: Dp = 24.dp
     val emptyStateIcon: Dp = 64.dp
     val hairline: Dp = 1.dp
