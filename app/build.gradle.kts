@@ -46,8 +46,12 @@ extensions.configure<ApplicationExtension> {
     buildTypes {
         getByName("release") {
             val hasKey = !System.getenv("KEYSTORE_PATH").isNullOrBlank()
-            signingConfig = if (hasKey) signingConfigs.getByName("release")
-                            else signingConfigs.getByName("debug")
+            signingConfig =
+                if (hasKey) {
+                    signingConfigs.getByName("release")
+                } else {
+                    signingConfigs.getByName("debug")
+                }
             if (!hasKey) logger.warn("No release keystore in env: signing release with debug key")
             isMinifyEnabled = true
             isShrinkResources = true

@@ -50,7 +50,7 @@ naming:
     active: true
     # Compose functions must start with uppercase (framework convention).
     ignoreAnnotated:
-      - 'Composable'
+      - 'androidx.compose.runtime.Composable'
 
 style:
   active: true
