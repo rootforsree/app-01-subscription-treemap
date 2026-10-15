@@ -3,18 +3,18 @@ package com.sreecharan.app_01_subscription_treemap.ui.theme
 import android.content.Context
 import android.provider.Settings
 import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.DampingRatioMediumBouncy
 import androidx.compose.animation.core.spring
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
+private const val DAMPING_RATIO_MEDIUM_BOUNCY = 0.5f
 private const val DAMPING_RATIO_NO_BOUNCY = 1f
 private const val STIFFNESS_MEDIUM = 1500f
 
 /** Bouncy spring for delightful moments: tab switches, sheet entrances. */
 val DelightfulSpring: AnimationSpec<Float> =
-    spring(dampingRatio = DampingRatioMediumBouncy, stiffness = STIFFNESS_MEDIUM)
+    spring(dampingRatio = DAMPING_RATIO_MEDIUM_BOUNCY, stiffness = STIFFNESS_MEDIUM)
 
 /** No-bounce spring for utilitarian state changes. */
 val UtilitarianSpring: AnimationSpec<Float> =
