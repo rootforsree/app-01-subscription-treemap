@@ -58,7 +58,6 @@ class EditorFlowTest {
         render(onSave = { captured = it })
 
         composeRule.onNodeWithTag("editor_name_field").performTextReplacement("HBO Max")
-        composeRule.onNodeWithTag("editor_amount_field").performClick()
         composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("15.99")
         composeRule.onNodeWithText("Yearly").performClick()
         composeRule.onNodeWithText("Streaming").performClick()
