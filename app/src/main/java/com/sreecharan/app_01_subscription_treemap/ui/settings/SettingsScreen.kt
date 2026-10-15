@@ -123,6 +123,7 @@ fun SettingsScreenContent(
     }
 }
 
+@Composable
 private fun LazyListScope.appearanceSection(
     state: SettingsUiState,
     onThemeModeSelected: (ThemeMode) -> Unit,
@@ -166,6 +167,7 @@ private fun LazyListScope.appearanceSection(
     }
 }
 
+@Composable
 private fun LazyListScope.generalSection(
     state: SettingsUiState,
     onHapticsToggled: (Boolean) -> Unit,

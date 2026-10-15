@@ -81,6 +81,7 @@ fun AboutScreenContent(
     }
 }
 
+@Composable
 private fun LazyListScope.aboutIdentitySection(appVersion: String) {
     val colors = LocalAppColors.current
     item(key = "identity", contentType = "identity") {
@@ -107,6 +108,7 @@ private fun LazyListScope.aboutIdentitySection(appVersion: String) {
     }
 }
 
+@Composable
 private fun LazyListScope.aboutLinksSection(
     onOpenGitHub: () -> Unit,
     onShareApp: () -> Unit,
