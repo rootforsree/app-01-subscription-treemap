@@ -98,6 +98,7 @@ private fun layoutRows(entries: List<Map.Entry<Long, Float>>): List<TreemapTile>
         if (rowWithoutLast.isNotEmpty() && worstAspectRatio(rowWithoutLast, remaining.shorterSide()) < worstNow) {
             row.removeAt(row.lastIndex)
             remaining = layoutRow(row, remaining, tiles)
+            row.clear()
             row.add(item)
         }
     }

@@ -9,7 +9,7 @@ class BillingCycleTest {
     private val tenDollars = 10.0
     private val twelveFifty = 12.5
     private val weeklyExpected = tenDollars * 52.0 / 12.0
-    private val quarterlyExpected = 30.0
+    private val quarterlyExpected = tenDollars / 3.0
     private val yearlyAmount = 120.0
     private val zero = 0.0
 
@@ -24,7 +24,7 @@ class BillingCycleTest {
     }
 
     @Test
-    fun `quarterly amount triples`() {
+    fun `quarterly amount divides by three`() {
         assertEquals(quarterlyExpected, BillingCycle.QUARTERLY.monthlyAmount(tenDollars), tolerance)
     }
 
