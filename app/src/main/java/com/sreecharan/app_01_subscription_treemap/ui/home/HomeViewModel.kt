@@ -59,7 +59,7 @@ class HomeViewModel @Inject constructor(
     private val eventsChannel = Channel<String>(Channel.BUFFERED)
 
     /** One-shot UI events (snackbars). Collected once in the route. */
-    val events: Flow<String> field = eventsChannel.receiveAsFlow()
+    val events: Flow<String> = eventsChannel.receiveAsFlow()
 
     private val detailFlow: Flow<DetailData> = detailSubscriptionIdFlow.flatMapLatest { id ->
         if (id == null) {
@@ -79,7 +79,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val uiState: StateFlow<HomeUiState> field = combine(
+    val uiState: StateFlow<HomeUiState> = combine(
         subscriptionsRepository.observeSubscriptions(),
         subscriptionsRepository.observeUnacknowledgedHikes(),
         selectedCategoryFlow,

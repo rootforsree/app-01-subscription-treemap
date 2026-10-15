@@ -28,6 +28,13 @@ complexity:
   LargeClass:
     active: true
     threshold: 600
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 15
+    thresholdInClasses: 15
+    thresholdInInterfaces: 15
+    thresholdInObjects: 15
+    thresholdInEnums: 15
 
 coroutines:
   active: true
@@ -49,6 +56,11 @@ naming:
   FunctionNaming:
     active: false
     # Disabled: Compose requires Uppercase function names, conflicts with this rule.
+  PackageNaming:
+    active: false
+    # Disabled: app package names contain underscores/numbers (e.g. app_01_subscription_treemap).
+  MatchingDeclarationName:
+    active: true
 
 style:
   active: true
