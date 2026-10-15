@@ -63,15 +63,6 @@ extensions.configure<ApplicationExtension> {
     buildFeatures {
         buildConfig = true
     }
-
-    // Consume the baseline profile produced by :baselineprofile at build time.
-    baselineProfile {
-        variants {
-            release {
-                from(project(":baselineprofile"))
-            }
-        }
-    }
 }
 
 // Proto DataStore codegen: lite runtime, protoc version pinned in the catalog.
@@ -120,6 +111,9 @@ dependencies {
     implementation(libs.serialization.json)
     // Sideloaded baseline profiles (bundled baseline-prof.txt) need this.
     implementation(libs.androidx.profileinstaller)
+    // Consumer -> producer wiring for the :baselineprofile module. The
+    // androidx.baselineprofile plugin adds this configuration to the app.
+    baselineProfile(project(":baselineprofile"))
     coreLibraryDesugaring(libs.desugar)
     debugImplementation(libs.compose.ui.tooling)
 
