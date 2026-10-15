@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -85,7 +86,7 @@ fun SettingsRow(
 }
 
 @Composable
-private fun SettingsRowContent(
+private fun RowScope.SettingsRowContent(
     title: String,
     subtitle: String?,
     leadingIcon: (@Composable () -> Unit)?,

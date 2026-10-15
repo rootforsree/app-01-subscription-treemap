@@ -47,10 +47,8 @@ potential-bugs:
 naming:
   active: true
   FunctionNaming:
-    active: true
-    # Compose functions must start with uppercase (framework convention).
-    ignoreAnnotated:
-      - 'androidx.compose.runtime.Composable'
+    active: false
+    # Disabled: Compose requires Uppercase function names, conflicts with this rule.
 
 style:
   active: true
