@@ -1,6 +1,7 @@
 package com.sreecharan.app_01_subscription_treemap.interaction
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -59,6 +60,8 @@ class EditorFlowTest {
 
         composeRule.onNodeWithTag("editor_name_field").performTextReplacement("HBO Max")
         composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("15.99")
+        // Debug: verify text was set
+        composeRule.onNodeWithTag("editor_amount_field").assertTextEquals("15.99")
         composeRule.onNodeWithText("Yearly").performClick()
         composeRule.onNodeWithText("Streaming").performClick()
         composeRule.onNodeWithText("Save").performClick()
