@@ -166,7 +166,6 @@ fun SubscriptionEditorContent(
                 amountError = false
             },
             label = { Text(stringResource(R.string.field_amount)) },
-            prefix = { Text(stringResource(R.string.currency_symbol)) },
             isError = amountError,
             supportingText =
                 if (amountError) {
