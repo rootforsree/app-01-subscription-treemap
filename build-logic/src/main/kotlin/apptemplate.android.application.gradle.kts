@@ -17,6 +17,8 @@ plugins {
     // alias(libs.plugins.*) does NOT work here: the version catalog is not
     // in scope inside a precompiled script plugin's plugins {} block.
     id("com.android.application")
+    // Kotlin serialization compiler plugin (for @Serializable navigation routes).
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 // AGP 9 rule: org.jetbrains.kotlin.android is NEVER applied. AGP 9 builds
