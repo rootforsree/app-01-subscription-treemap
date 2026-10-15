@@ -79,16 +79,46 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private data class UiInputs1(
+        val subscriptions: List<Subscription>,
+        val unacknowledgedHikes: List<PriceHike>,
+        val selectedCategory: SubscriptionCategory?,
+        val showAddSheet: Boolean,
+    )
+
+    private data class UiInputs2(
+        val editing: Subscription?,
+        val detail: DetailData,
+        val isRefreshing: Boolean,
+        val seedError: String?,
+    )
+
     val uiState: StateFlow<HomeUiState> = combine(
-        subscriptionsRepository.observeSubscriptions(),
-        subscriptionsRepository.observeUnacknowledgedHikes(),
-        selectedCategoryFlow,
-        showAddSheetFlow,
-        editingSubscriptionFlow,
-        detailFlow,
-        refreshingFlow,
-        seedErrorFlow,
-    ) { subscriptions, unacknowledgedHikes, selectedCategory, showAddSheet, editing, detail, isRefreshing, seedError ->
+        combine(
+            subscriptionsRepository.observeSubscriptions(),
+            subscriptionsRepository.observeUnacknowledgedHikes(),
+            selectedCategoryFlow,
+            showAddSheetFlow,
+        ) { subscriptions, unacknowledgedHikes, selectedCategory, showAddSheet ->
+            UiInputs1(subscriptions, unacknowledgedHikes, selectedCategory, showAddSheet)
+        },
+        combine(
+            editingSubscriptionFlow,
+            detailFlow,
+            refreshingFlow,
+            seedErrorFlow,
+        ) { editing, detail, isRefreshing, seedError ->
+            UiInputs2(editing, detail, isRefreshing, seedError)
+        },
+    ) { inputs1, inputs2 ->
+        val subscriptions = inputs1.subscriptions
+        val unacknowledgedHikes = inputs1.unacknowledgedHikes
+        val selectedCategory = inputs1.selectedCategory
+        val showAddSheet = inputs1.showAddSheet
+        val editing = inputs2.editing
+        val detail = inputs2.detail
+        val isRefreshing = inputs2.isRefreshing
+        val seedError = inputs2.seedError
         val filtered = if (selectedCategory == null) {
             subscriptions
         } else {
@@ -166,7 +196,7 @@ class HomeViewModel @Inject constructor(
 
     fun saveSubscription(input: SubscriptionInput) {
         viewModelScope.launch {
-            when (val result = subscriptionsRepository.saveSubscription(input)) {
+            when (subscriptionsRepository.saveSubscription(input)) {
                 is SaveResult.HikeDetected -> {
                     onEditorDismiss()
                     eventsChannel.send(appContext.getString(R.string.snack_hike_recorded))

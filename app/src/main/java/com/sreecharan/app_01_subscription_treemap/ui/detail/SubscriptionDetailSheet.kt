@@ -83,7 +83,6 @@ fun SubscriptionDetailSheet(
             latestHike = latestHike,
             onEdit = onEdit,
             onDelete = onDelete,
-            onDismiss = onDismiss,
         )
     }
 }
@@ -95,7 +94,6 @@ fun SubscriptionDetailContent(
     latestHike: PriceHike?,
     onEdit: () -> Unit,
     onDelete: (Long) -> Unit,
-    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val colors = LocalAppColors.current

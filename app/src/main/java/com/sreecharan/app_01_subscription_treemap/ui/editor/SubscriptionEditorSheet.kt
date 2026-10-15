@@ -90,7 +90,6 @@ fun SubscriptionEditorSheet(
             categories = categories,
             onSave = onSave,
             onDelete = onDelete,
-            onDismiss = onDismiss,
         )
     }
 }
@@ -106,7 +105,6 @@ fun SubscriptionEditorContent(
     categories: List<SubscriptionCategory>,
     onSave: (SubscriptionInput) -> Unit,
     onDelete: (Long) -> Unit,
-    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val colors = LocalAppColors.current
