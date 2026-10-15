@@ -1,6 +1,5 @@
-# Shared detekt config for the template (detekt 1.23.x, config_version 3).
+# Shared detekt config for the template (detekt 1.23.x).
 # Fails the build on the skill's ban list: !!, GlobalScope, forbidden comments.
-config_version: 3
 
 config:
   validation: true
@@ -12,12 +11,6 @@ build:
 
 comments:
   active: true
-  ForbiddenComment:
-    active: true
-    values:
-      - 'TODO:'
-      - 'FIXME:'
-      - 'STOPSHIP:'
 
 complexity:
   active: true
@@ -53,6 +46,12 @@ potential-bugs:
 
 style:
   active: true
+  ForbiddenComment:
+    active: true
+    values:
+      - 'TODO:'
+      - 'FIXME:'
+      - 'STOPSHIP:'
   MagicNumber:
     active: true
     ignoreNumbers:
@@ -71,4 +70,4 @@ style:
   ReturnCount:
     active: true
     max: 2
-    excludedFunctions: 'equals'
+    excludedFunctions: ['equals']

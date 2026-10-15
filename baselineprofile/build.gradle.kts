@@ -14,8 +14,6 @@ android {
     }
 
     targetProjectPath = ":app"
-    // The generator runs against the release build type of :app.
-    testBuildType = "release"
 }
 
 dependencies {
