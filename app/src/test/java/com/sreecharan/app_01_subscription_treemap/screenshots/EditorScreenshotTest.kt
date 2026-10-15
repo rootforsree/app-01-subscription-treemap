@@ -44,6 +44,7 @@ class EditorScreenshotTest {
                     categories = SubscriptionCategory.entries,
                     onSave = {},
                     onDelete = {},
+                    onDismiss = {},
                 )
             }
         }
