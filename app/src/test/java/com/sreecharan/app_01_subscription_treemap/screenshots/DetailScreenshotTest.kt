@@ -1,6 +1,6 @@
 package com.sreecharan.app_01_subscription_treemap.screenshots
 
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onRoot
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.sreecharan.app_01_subscription_treemap.data.model.BillingCycle

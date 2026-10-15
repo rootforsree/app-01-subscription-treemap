@@ -18,6 +18,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 /**
@@ -96,8 +97,8 @@ class SubscriptionsRepositoryTest {
 
             val result = repository.saveSubscription(input(amount = increasedAmount).copy(id = id))
 
-            assertTrue(result is SaveResult.HikeDetected)
-            val hike = (result as SaveResult.HikeDetected).hike
+            assertIs<SaveResult.HikeDetected>(result)
+            val hike = result.hike
             assertEquals(baseAmount, hike.oldAmount)
             assertEquals(increasedAmount, hike.newAmount)
 
