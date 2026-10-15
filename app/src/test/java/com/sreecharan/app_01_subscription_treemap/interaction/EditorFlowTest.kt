@@ -66,7 +66,12 @@ class EditorFlowTest {
         val input = captured
         assertNotNull(input)
         assertEquals("HBO Max", input?.name)
-        assertEquals(EXPECTED_AMOUNT, input?.amount ?: 0.0, 0.0)
+        assertEquals(
+            "Amount was ${input?.amount}, expected $EXPECTED_AMOUNT",
+            EXPECTED_AMOUNT,
+            input?.amount ?: 0.0,
+            0.0,
+        )
         assertEquals(BillingCycle.YEARLY, input?.cycle)
         assertEquals(SubscriptionCategory.STREAMING, input?.category)
         assertNull(input?.id)
