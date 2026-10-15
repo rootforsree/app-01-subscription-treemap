@@ -89,6 +89,6 @@ class HikesScreenshotTest {
                 )
             }
         }
-        composeRule.captureRoboImage(name)
+        composeRule.onRoot().captureRoboImage(name)
     }
 }

@@ -31,6 +31,10 @@ class EditorFlowTest {
     @get:Rule
     val composeRule = createComposeRule()
 
+    private companion object {
+        const val EXPECTED_AMOUNT = 15.99
+    }
+
     private fun render(
         onSave: (SubscriptionInput) -> Unit,
         onDelete: (Long) -> Unit = {},
@@ -62,7 +66,7 @@ class EditorFlowTest {
         val input = captured
         assertNotNull(input)
         assertEquals("HBO Max", input?.name)
-        assertEquals(15.99, input?.amount ?: 0.0, 0.0)
+        assertEquals(EXPECTED_AMOUNT, input?.amount ?: 0.0, 0.0)
         assertEquals(BillingCycle.YEARLY, input?.cycle)
         assertEquals(SubscriptionCategory.STREAMING, input?.category)
         assertNull(input?.id)

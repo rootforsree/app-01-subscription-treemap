@@ -157,6 +157,6 @@ class TreemapScreenshotTest {
                 )
             }
         }
-        composeRule.captureRoboImage(name)
+        composeRule.onRoot().captureRoboImage(name)
     }
 }

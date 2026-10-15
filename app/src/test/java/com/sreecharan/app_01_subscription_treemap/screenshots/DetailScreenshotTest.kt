@@ -59,6 +59,6 @@ class DetailScreenshotTest {
                 )
             }
         }
-        composeRule.captureRoboImage("detail_light")
+        composeRule.onRoot().captureRoboImage("detail_light")
     }
 }

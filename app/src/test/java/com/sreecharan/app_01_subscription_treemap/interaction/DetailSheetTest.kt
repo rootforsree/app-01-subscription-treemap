@@ -30,9 +30,13 @@ class DetailSheetTest {
     @get:Rule
     val composeRule = createComposeRule()
 
+    private companion object {
+        const val SUBSCRIPTION_ID = 7L
+    }
+
     private val subscription =
         Subscription(
-            id = 7,
+            id = SUBSCRIPTION_ID,
             name = "Netflix",
             amount = 17.99,
             cycle = BillingCycle.MONTHLY,
@@ -69,7 +73,7 @@ class DetailSheetTest {
         composeRule.onNodeWithText("Delete Netflix?").assertIsDisplayed()
         composeRule.onNodeWithTag("delete_confirm_button").performClick()
 
-        assertEquals(7L, deletedId)
+        assertEquals(SUBSCRIPTION_ID, deletedId)
     }
 
     @Test

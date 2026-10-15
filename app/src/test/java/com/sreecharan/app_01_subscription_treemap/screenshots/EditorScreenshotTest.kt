@@ -47,6 +47,6 @@ class EditorScreenshotTest {
                 )
             }
         }
-        composeRule.captureRoboImage(name)
+        composeRule.onRoot().captureRoboImage(name)
     }
 }
