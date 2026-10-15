@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ import com.sreecharan.app_01_subscription_treemap.ui.format.formatUsd
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 
 /**
  * Thin stateful route: owns the ViewModel and forwards events. The content
@@ -70,28 +72,11 @@ fun HikesScreenContent(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.hikes_title),
-                        style = AppTypography.largeTitle,
-                    )
-                },
-                actions = {
-                    if (state.hikes.isNotEmpty()) {
-                        TextButton(onClick = onAcknowledgeAll) {
-                            Text(
-                                text = stringResource(R.string.action_acknowledge_all),
-                                color = colors.accent,
-                            )
-                        }
-                    }
-                },
+            HikesTopBar(
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = colors.groupedBackground,
-                    scrolledContainerColor = colors.groupedBackground,
-                ),
+                colors = colors,
+                showAcknowledgeAll = state.hikes.isNotEmpty(),
+                onAcknowledgeAll = onAcknowledgeAll,
             )
         },
         containerColor = colors.groupedBackground,
@@ -187,4 +172,37 @@ private fun HikeRow(
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HikesTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    colors: AppColors,
+    showAcknowledgeAll: Boolean,
+    onAcknowledgeAll: () -> Unit,
+) {
+    LargeTopAppBar(
+        title = {
+            Text(
+                text = stringResource(R.string.hikes_title),
+                style = AppTypography.largeTitle,
+            )
+        },
+        actions = {
+            if (showAcknowledgeAll) {
+                TextButton(onClick = onAcknowledgeAll) {
+                    Text(
+                        text = stringResource(R.string.action_acknowledge_all),
+                        color = colors.accent,
+                    )
+                }
+            }
+        },
+        scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.largeTopAppBarColors(
+            containerColor = colors.groupedBackground,
+            scrolledContainerColor = colors.groupedBackground,
+        ),
+    )
 }

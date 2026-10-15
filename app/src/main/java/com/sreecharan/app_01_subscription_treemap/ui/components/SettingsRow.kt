@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.rememberHapticTick
 
 /**
@@ -31,6 +32,7 @@ import com.sreecharan.app_01_subscription_treemap.ui.theme.rememberHapticTick
  * control, and every tap plays a light haptic tick unless haptics are off.
  */
 @Composable
+@Suppress("LongParameterList") // Flexible row component: 9 optional slots for different settings types
 fun SettingsRow(
     title: String,
     modifier: Modifier = Modifier,
@@ -51,32 +53,12 @@ fun SettingsRow(
             append(subtitle)
         }
     }
-    val interaction = when {
-        toggleableValue != null -> Modifier.toggleable(
-            value = toggleableValue,
-            role = Role.Switch,
-            onValueChange = {
-                tick()
-                onClick?.invoke()
-            },
-        )
-        selectableSelected != null -> Modifier.selectable(
-            selected = selectableSelected,
-            role = Role.RadioButton,
-            onClick = {
-                tick()
-                onClick?.invoke()
-            },
-        )
-        onClick != null -> Modifier.clickable(
-            role = Role.Button,
-            onClick = {
-                tick()
-                onClick()
-            },
-        )
-        else -> Modifier
-    }
+    val interaction = interactionModifier(
+        toggleableValue = toggleableValue,
+        selectableSelected = selectableSelected,
+        onClick = onClick,
+        tick = tick,
+    )
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -92,27 +74,76 @@ fun SettingsRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
     ) {
-        if (leadingIcon != null) {
-            Box(modifier = Modifier.size(AppDimens.iconSize)) {
-                leadingIcon()
-            }
-        }
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                style = AppTypography.body,
-                color = colors.label,
-            )
-            if (subtitle != null) {
-                Text(
-                    text = subtitle,
-                    style = AppTypography.footnote,
-                    color = colors.secondaryLabel,
-                )
-            }
-        }
-        if (trailing != null) {
-            trailing()
+        SettingsRowContent(
+            title = title,
+            subtitle = subtitle,
+            leadingIcon = leadingIcon,
+            trailing = trailing,
+            colors = colors,
+        )
+    }
+}
+
+@Composable
+private fun SettingsRowContent(
+    title: String,
+    subtitle: String?,
+    leadingIcon: (@Composable () -> Unit)?,
+    trailing: (@Composable () -> Unit)?,
+    colors: AppColors,
+) {
+    if (leadingIcon != null) {
+        Box(modifier = Modifier.size(AppDimens.iconSize)) {
+            leadingIcon()
         }
     }
+    Column(modifier = Modifier.weight(1f)) {
+        Text(
+            text = title,
+            style = AppTypography.body,
+            color = colors.label,
+        )
+        if (subtitle != null) {
+            Text(
+                text = subtitle,
+                style = AppTypography.footnote,
+                color = colors.secondaryLabel,
+            )
+        }
+    }
+    if (trailing != null) {
+        trailing()
+    }
+}
+
+private fun interactionModifier(
+    toggleableValue: Boolean?,
+    selectableSelected: Boolean?,
+    onClick: (() -> Unit)?,
+    tick: () -> Unit,
+): Modifier = when {
+    toggleableValue != null -> Modifier.toggleable(
+        value = toggleableValue,
+        role = Role.Switch,
+        onValueChange = {
+            tick()
+            onClick?.invoke()
+        },
+    )
+    selectableSelected != null -> Modifier.selectable(
+        selected = selectableSelected,
+        role = Role.RadioButton,
+        onClick = {
+            tick()
+            onClick?.invoke()
+        },
+    )
+    onClick != null -> Modifier.clickable(
+        role = Role.Button,
+        onClick = {
+            tick()
+            onClick()
+        },
+    )
+    else -> Modifier
 }

@@ -72,28 +72,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     } else {
         stringResource(R.string.tab_hikes)
     }
-    val tabs = persistentListOf(
-        TabItem(
-            label = stringResource(R.string.tab_subscriptions),
-            selectedIcon = Icons.Filled.Dashboard,
-            unselectedIcon = Icons.Outlined.Dashboard,
-        ),
-        TabItem(
-            label = hikesLabel,
-            selectedIcon = Icons.Filled.TrendingUp,
-            unselectedIcon = Icons.Outlined.TrendingUp,
-        ),
-        TabItem(
-            label = stringResource(R.string.tab_settings),
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-        ),
-        TabItem(
-            label = stringResource(R.string.tab_about),
-            selectedIcon = Icons.Filled.Info,
-            unselectedIcon = Icons.Outlined.Info,
-        ),
-    )
+    val tabs = rememberTabs(hikesLabel = hikesLabel)
     val selectedIndex = when {
         destination?.hasRoute(HomeRoute::class) == true -> 0
         destination?.hasRoute(HikesRoute::class) == true -> 1
@@ -149,3 +128,27 @@ private fun NavController.navigateTab(route: Any) {
         restoreState = true
     }
 }
+
+@Composable
+private fun rememberTabs(hikesLabel: String) = persistentListOf(
+    TabItem(
+        label = stringResource(R.string.tab_subscriptions),
+        selectedIcon = Icons.Filled.Dashboard,
+        unselectedIcon = Icons.Outlined.Dashboard,
+    ),
+    TabItem(
+        label = hikesLabel,
+        selectedIcon = Icons.Filled.TrendingUp,
+        unselectedIcon = Icons.Outlined.TrendingUp,
+    ),
+    TabItem(
+        label = stringResource(R.string.tab_settings),
+        selectedIcon = Icons.Filled.Settings,
+        unselectedIcon = Icons.Outlined.Settings,
+    ),
+    TabItem(
+        label = stringResource(R.string.tab_about),
+        selectedIcon = Icons.Filled.Info,
+        unselectedIcon = Icons.Outlined.Info,
+    ),
+)

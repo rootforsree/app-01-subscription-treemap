@@ -6,6 +6,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +52,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sreecharan.app_01_subscription_treemap.R
@@ -69,6 +72,7 @@ import com.sreecharan.app_01_subscription_treemap.ui.theme.AppShapes
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.CategoryColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.rememberHapticTick
 import kotlinx.collections.immutable.ImmutableList
 
@@ -131,60 +135,24 @@ fun HomeScreenContent(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.home_title),
-                        style = AppTypography.largeTitle,
-                    )
-                },
-                actions = {
-                    IconButton(onClick = onAddClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = stringResource(R.string.action_add_subscription),
-                            tint = colors.accent,
-                        )
-                    }
-                },
+            HomeTopBar(
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = colors.groupedBackground,
-                    scrolledContainerColor = colors.groupedBackground,
-                ),
+                colors = colors,
+                onAddClick = onAddClick,
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = colors.groupedBackground,
     ) { padding ->
-        when {
-            state.isLoading -> SkeletonList(
-                contentPadding = PaddingValues(
-                    top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
-                ),
-            )
-            state.errorMessage != null -> ErrorState(
-                message = state.errorMessage,
-                onRetry = onRetry,
-                modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
-            )
-            state.subscriptions.isEmpty() && state.selectedCategory == null -> EmptyState(
-                title = stringResource(R.string.empty_title),
-                message = stringResource(R.string.empty_message),
-                actionLabel = stringResource(R.string.action_add_subscription),
-                onAction = onAddClick,
-                icon = Icons.Outlined.Dashboard,
-                modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
-            )
-            else -> HomeContentBody(
-                state = state,
-                onCategorySelected = onCategorySelected,
-                onSubscriptionClick = onSubscriptionClick,
-                onNavigateToHikes = onNavigateToHikes,
-                contentPadding = padding,
-            )
-        }
+        HomeScaffoldContent(
+            state = state,
+            padding = padding,
+            onCategorySelected = onCategorySelected,
+            onSubscriptionClick = onSubscriptionClick,
+            onNavigateToHikes = onNavigateToHikes,
+            onAddClick = onAddClick,
+            onRetry = onRetry,
+        )
     }
 
     if (state.showAddSheet || state.editingSubscription != null) {
@@ -206,6 +174,78 @@ fun HomeScreenContent(
             onDismiss = onDetailDismiss,
         )
     }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun HomeScaffoldContent(
+    state: HomeUiState,
+    padding: PaddingValues,
+    onCategorySelected: (SubscriptionCategory?) -> Unit,
+    onSubscriptionClick: (Long) -> Unit,
+    onNavigateToHikes: () -> Unit,
+    onAddClick: () -> Unit,
+    onRetry: () -> Unit,
+) {
+    when {
+        state.isLoading -> SkeletonList(
+            contentPadding = PaddingValues(
+                top = padding.calculateTopPadding(),
+                bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
+            ),
+        )
+        state.errorMessage != null -> ErrorState(
+            message = state.errorMessage,
+            onRetry = onRetry,
+            modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
+        )
+        state.subscriptions.isEmpty() && state.selectedCategory == null -> EmptyState(
+            title = stringResource(R.string.empty_title),
+            message = stringResource(R.string.empty_message),
+            actionLabel = stringResource(R.string.action_add_subscription),
+            onAction = onAddClick,
+            icon = Icons.Outlined.Dashboard,
+            modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
+        )
+        else -> HomeContentBody(
+            state = state,
+            onCategorySelected = onCategorySelected,
+            onSubscriptionClick = onSubscriptionClick,
+            onNavigateToHikes = onNavigateToHikes,
+            contentPadding = padding,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    colors: AppColors,
+    onAddClick: () -> Unit,
+) {
+    LargeTopAppBar(
+        title = {
+            Text(
+                text = stringResource(R.string.home_title),
+                style = AppTypography.largeTitle,
+            )
+        },
+        actions = {
+            IconButton(onClick = onAddClick) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.action_add_subscription),
+                    tint = colors.accent,
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.largeTopAppBarColors(
+            containerColor = colors.groupedBackground,
+            scrolledContainerColor = colors.groupedBackground,
+        ),
+    )
 }
 
 @Composable
@@ -425,49 +465,66 @@ private fun TreemapCard(
     ) {
         for (tile in tiles) {
             val subscription = byId[tile.subscriptionId] ?: continue
-            val tileWidth = maxWidth * tile.width
-            val tileHeight = maxHeight * tile.height
-            Box(
-                modifier = Modifier
-                    .offset(x = maxWidth * tile.x, y = maxHeight * tile.y)
-                    .size(width = tileWidth, height = tileHeight)
-                    .clip(RoundedCornerShape(6.dp))
-                    .testTag("treemap_tile_${tile.subscriptionId}")
-                    .semantics(mergeDescendants = true) {
-                        contentDescription = subscription.name
-                    }
-                    .clickable { onTileClick(tile.subscriptionId) },
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(2.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(CategoryColors.colorFor(subscription.category))
-                        .padding(AppDimens.spacing8),
-                    contentAlignment = Alignment.TopStart,
-                ) {
-                    if (tileWidth >= TileMinTextWidth && tileHeight >= TileMinTextHeight) {
-                        Column {
-                            Text(
-                                text = subscription.name,
-                                style = AppTypography.headline,
-                                color = Color.White,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                            Text(
-                                text = stringResource(
-                                    R.string.per_month_short,
-                                    formatUsd(subscription.monthlyAmount),
-                                ),
-                                style = AppTypography.footnote,
-                                color = Color.White.copy(alpha = 0.85f),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
+            TreemapTile(
+                tile = tile,
+                subscription = subscription,
+                maxWidth = maxWidth,
+                maxHeight = maxHeight,
+                onTileClick = onTileClick,
+            )
+        }
+    }
+}
+
+@Composable
+private fun BoxWithConstraintsScope.TreemapTile(
+    tile: TreemapTile,
+    subscription: Subscription,
+    maxWidth: Dp,
+    maxHeight: Dp,
+    onTileClick: (Long) -> Unit,
+) {
+    val tileWidth = maxWidth * tile.width
+    val tileHeight = maxHeight * tile.height
+    Box(
+        modifier = Modifier
+            .offset(x = maxWidth * tile.x, y = maxHeight * tile.y)
+            .size(width = tileWidth, height = tileHeight)
+            .clip(RoundedCornerShape(6.dp))
+            .testTag("treemap_tile_${tile.subscriptionId}")
+            .semantics(mergeDescendants = true) {
+                contentDescription = subscription.name
+            }
+            .clickable { onTileClick(tile.subscriptionId) },
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(2.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(CategoryColors.colorFor(subscription.category))
+                .padding(AppDimens.spacing8),
+            contentAlignment = Alignment.TopStart,
+        ) {
+            if (tileWidth >= TileMinTextWidth && tileHeight >= TileMinTextHeight) {
+                Column {
+                    Text(
+                        text = subscription.name,
+                        style = AppTypography.headline,
+                        color = Color.White,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.per_month_short,
+                            formatUsd(subscription.monthlyAmount),
+                        ),
+                        style = AppTypography.footnote,
+                        color = Color.White.copy(alpha = 0.85f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
             }
         }

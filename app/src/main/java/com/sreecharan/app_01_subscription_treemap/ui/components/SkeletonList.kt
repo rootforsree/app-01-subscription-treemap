@@ -31,6 +31,11 @@ import com.sreecharan.app_01_subscription_treemap.ui.theme.animationsEnabled
  * title, body and caption bars. Alpha pulse only, no gradient sweep, and
  * a static alpha when Reduce Motion is on. Never a full-screen spinner.
  */
+private const val SHIMMER_STATIC_ALPHA = 0.6f
+private const val SHIMMER_MIN_ALPHA = 0.35f
+private const val SHIMMER_MAX_ALPHA = 1f
+private const val SHIMMER_DURATION_MS = 1200
+
 @Composable
 fun SkeletonList(
     modifier: Modifier = Modifier,
@@ -38,14 +43,14 @@ fun SkeletonList(
     rows: Int = 6,
 ) {
     val shimmerAlpha = if (!animationsEnabled(LocalContext.current)) {
-        0.6f
+        SHIMMER_STATIC_ALPHA
     } else {
         val transition = rememberInfiniteTransition(label = "skeleton")
         val pulse by transition.animateFloat(
-            initialValue = 0.35f,
-            targetValue = 1f,
+            initialValue = SHIMMER_MIN_ALPHA,
+            targetValue = SHIMMER_MAX_ALPHA,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 1200, easing = LinearEasing),
+                animation = tween(durationMillis = SHIMMER_DURATION_MS, easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse,
             ),
             label = "skeletonAlpha",

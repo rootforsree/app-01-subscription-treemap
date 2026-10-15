@@ -89,6 +89,7 @@ fun SubscriptionDetailSheet(
 }
 
 @Composable
+@Suppress("LongMethod") // Detail sheet: header, stats, hike alert, actions; cohesive as one unit
 fun SubscriptionDetailContent(
     subscription: Subscription,
     latestHike: PriceHike?,

@@ -4,12 +4,13 @@ import android.content.Context
 import android.provider.Settings
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DampingRatioMediumBouncy
-import androidx.compose.animation.core.DampingRatioNoBouncy
-import androidx.compose.animation.core.StiffnessMedium
 import androidx.compose.animation.core.spring
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+
+private const val DampingRatioNoBouncy = 1f
+private const val StiffnessMedium = 1500f
 
 /** Bouncy spring for delightful moments: tab switches, sheet entrances. */
 val DelightfulSpring: AnimationSpec<Float> =

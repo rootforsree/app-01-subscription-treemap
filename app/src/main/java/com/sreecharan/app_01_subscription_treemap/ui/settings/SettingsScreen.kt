@@ -6,6 +6,7 @@ import android.provider.Settings as SystemSettings
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.DarkMode
@@ -22,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -41,6 +43,7 @@ import com.sreecharan.app_01_subscription_treemap.ui.components.SettingsRow
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -98,21 +101,7 @@ fun SettingsScreenContent(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.settings_title),
-                        style = AppTypography.largeTitle,
-                    )
-                },
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = colors.groupedBackground,
-                    scrolledContainerColor = colors.groupedBackground,
-                ),
-            )
-        },
+        topBar = { SettingsTopBar(scrollBehavior = scrollBehavior, colors = colors) },
         containerColor = colors.groupedBackground,
     ) { padding ->
         InsetGroupedList(
@@ -121,91 +110,115 @@ fun SettingsScreenContent(
                 bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
             ),
         ) {
-            item(key = "appearance-header", contentType = "header") {
-                SectionHeader(title = stringResource(R.string.section_appearance))
-            }
-            item(key = "appearance-card", contentType = "card") {
-                GroupCard {
-                    ThemeOptions.forEachIndexed { index, option ->
-                        if (index > 0) {
-                            RowDivider()
-                        }
-                        val selected = state.themeMode == option.mode
-                        SettingsRow(
-                            title = stringResource(option.titleRes),
-                            subtitle = stringResource(option.subtitleRes),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = option.icon,
-                                    contentDescription = null,
-                                    tint = colors.secondaryLabel,
-                                    modifier = Modifier.size(AppDimens.iconSize),
-                                )
-                            },
-                            trailing = {
-                                RadioButton(
-                                    selected = selected,
-                                    onClick = null,
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = colors.accent,
-                                    ),
-                                )
-                            },
-                            selectableSelected = selected,
-                            onClick = { onThemeModeSelected(option.mode) },
-                        )
-                    }
-                }
-            }
-            item(key = "general-header", contentType = "header") {
-                SectionHeader(title = stringResource(R.string.section_general))
-            }
-            item(key = "general-card", contentType = "card") {
-                GroupCard {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_haptics_title),
-                        subtitle = stringResource(R.string.settings_haptics_sub),
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Vibration,
-                                contentDescription = null,
-                                tint = colors.secondaryLabel,
-                                modifier = Modifier.size(AppDimens.iconSize),
-                            )
-                        },
-                        trailing = {
-                            Switch(
-                                checked = state.hapticsEnabled,
-                                onCheckedChange = null,
-                            )
-                        },
-                        toggleableValue = state.hapticsEnabled,
-                        onClick = { onHapticsToggled(!state.hapticsEnabled) },
-                    )
+            appearanceSection(
+                state = state,
+                onThemeModeSelected = onThemeModeSelected,
+            )
+            generalSection(
+                state = state,
+                onHapticsToggled = onHapticsToggled,
+                onOpenNotificationSettings = onOpenNotificationSettings,
+            )
+        }
+    }
+}
+
+private fun LazyListScope.appearanceSection(
+    state: SettingsUiState,
+    onThemeModeSelected: (ThemeMode) -> Unit,
+) {
+    val colors = LocalAppColors.current
+    item(key = "appearance-header", contentType = "header") {
+        SectionHeader(title = stringResource(R.string.section_appearance))
+    }
+    item(key = "appearance-card", contentType = "card") {
+        GroupCard {
+            ThemeOptions.forEachIndexed { index, option ->
+                if (index > 0) {
                     RowDivider()
-                    SettingsRow(
-                        title = stringResource(R.string.settings_notifications_title),
-                        subtitle = stringResource(R.string.settings_notifications_sub),
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Notifications,
-                                contentDescription = null,
-                                tint = colors.secondaryLabel,
-                                modifier = Modifier.size(AppDimens.iconSize),
-                            )
-                        },
-                        trailing = {
-                            Icon(
-                                imageVector = Icons.Filled.ChevronRight,
-                                contentDescription = null,
-                                tint = colors.secondaryLabel,
-                                modifier = Modifier.size(AppDimens.iconSize),
-                            )
-                        },
-                        onClick = onOpenNotificationSettings,
-                    )
                 }
+                val selected = state.themeMode == option.mode
+                SettingsRow(
+                    title = stringResource(option.titleRes),
+                    subtitle = stringResource(option.subtitleRes),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = option.icon,
+                            contentDescription = null,
+                            tint = colors.secondaryLabel,
+                            modifier = Modifier.size(AppDimens.iconSize),
+                        )
+                    },
+                    trailing = {
+                        RadioButton(
+                            selected = selected,
+                            onClick = null,
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = colors.accent,
+                            ),
+                        )
+                    },
+                    selectableSelected = selected,
+                    onClick = { onThemeModeSelected(option.mode) },
+                )
             }
+        }
+    }
+}
+
+private fun LazyListScope.generalSection(
+    state: SettingsUiState,
+    onHapticsToggled: (Boolean) -> Unit,
+    onOpenNotificationSettings: () -> Unit,
+) {
+    val colors = LocalAppColors.current
+    item(key = "general-header", contentType = "header") {
+        SectionHeader(title = stringResource(R.string.section_general))
+    }
+    item(key = "general-card", contentType = "card") {
+        GroupCard {
+            SettingsRow(
+                title = stringResource(R.string.settings_haptics_title),
+                subtitle = stringResource(R.string.settings_haptics_sub),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Vibration,
+                        contentDescription = null,
+                        tint = colors.secondaryLabel,
+                        modifier = Modifier.size(AppDimens.iconSize),
+                    )
+                },
+                trailing = {
+                    Switch(
+                        checked = state.hapticsEnabled,
+                        onCheckedChange = null,
+                    )
+                },
+                toggleableValue = state.hapticsEnabled,
+                onClick = { onHapticsToggled(!state.hapticsEnabled) },
+            )
+            RowDivider()
+            SettingsRow(
+                title = stringResource(R.string.settings_notifications_title),
+                subtitle = stringResource(R.string.settings_notifications_sub),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Notifications,
+                        contentDescription = null,
+                        tint = colors.secondaryLabel,
+                        modifier = Modifier.size(AppDimens.iconSize),
+                    )
+                },
+                trailing = {
+                    Icon(
+                        imageVector = Icons.Filled.ChevronRight,
+                        contentDescription = null,
+                        tint = colors.secondaryLabel,
+                        modifier = Modifier.size(AppDimens.iconSize),
+                    )
+                },
+                onClick = onOpenNotificationSettings,
+            )
         }
     }
 }
@@ -215,4 +228,25 @@ private fun openNotificationSettings(context: Context) {
         putExtra(SystemSettings.EXTRA_APP_PACKAGE, context.packageName)
     }
     context.startActivity(intent)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SettingsTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    colors: AppColors,
+) {
+    LargeTopAppBar(
+        title = {
+            Text(
+                text = stringResource(R.string.settings_title),
+                style = AppTypography.largeTitle,
+            )
+        },
+        scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.largeTopAppBarColors(
+            containerColor = colors.groupedBackground,
+            scrolledContainerColor = colors.groupedBackground,
+        ),
+    )
 }

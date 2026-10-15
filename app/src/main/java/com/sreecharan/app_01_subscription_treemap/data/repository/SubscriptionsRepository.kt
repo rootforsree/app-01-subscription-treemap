@@ -270,28 +270,28 @@ class SubscriptionsRepositoryImpl @Inject constructor(
             ),
         )
     }
-
-    private fun SubscriptionEntity.toDomain(): Subscription = Subscription(
-        id = id,
-        name = name,
-        amount = amount,
-        currency = currency,
-        cycle = BillingCycle.valueOf(cycle),
-        category = SubscriptionCategory.valueOf(category),
-        nextBillingEpochDay = nextBillingEpochDay,
-        notes = notes,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-    )
-
-    private fun PriceHikeEntity.toDomain(): PriceHike = PriceHike(
-        id = id,
-        subscriptionId = subscriptionId,
-        subscriptionName = subscriptionName,
-        oldAmount = oldAmount,
-        newAmount = newAmount,
-        cycle = BillingCycle.valueOf(cycle),
-        detectedAt = detectedAt,
-        acknowledged = acknowledged,
-    )
 }
+
+private fun SubscriptionEntity.toDomain(): Subscription = Subscription(
+    id = id,
+    name = name,
+    amount = amount,
+    currency = currency,
+    cycle = BillingCycle.valueOf(cycle),
+    category = SubscriptionCategory.valueOf(category),
+    nextBillingEpochDay = nextBillingEpochDay,
+    notes = notes,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+)
+
+private fun PriceHikeEntity.toDomain(): PriceHike = PriceHike(
+    id = id,
+    subscriptionId = subscriptionId,
+    subscriptionName = subscriptionName,
+    oldAmount = oldAmount,
+    newAmount = newAmount,
+    cycle = BillingCycle.valueOf(cycle),
+    detectedAt = detectedAt,
+    acknowledged = acknowledged,
+)

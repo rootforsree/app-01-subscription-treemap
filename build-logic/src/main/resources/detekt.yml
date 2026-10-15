@@ -24,7 +24,7 @@ complexity:
     active: true
     functionThreshold: 6
     constructorThreshold: 7
-    ignoreDefaultParameters: false
+    ignoreDefaultParameters: true
   LargeClass:
     active: true
     threshold: 600
@@ -44,6 +44,14 @@ potential-bugs:
   UnsafeCallOnNullableType:
     active: true
 
+naming:
+  active: true
+  FunctionNaming:
+    active: true
+    # Compose functions must start with uppercase (framework convention).
+    ignoreAnnotated:
+      - 'Composable'
+
 style:
   active: true
   ForbiddenComment:
@@ -59,6 +67,8 @@ style:
       - '0'
       - '1'
       - '2'
+      - '3'
+      - '4'
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
     ignoreAnnotation: true

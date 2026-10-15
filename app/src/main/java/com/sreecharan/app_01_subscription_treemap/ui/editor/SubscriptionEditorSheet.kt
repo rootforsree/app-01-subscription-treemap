@@ -97,6 +97,10 @@ fun SubscriptionEditorSheet(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress(
+    "LongMethod",
+    "CyclomaticComplexMethod",
+) // Complex form: 10 fields with validation, clearer as one cohesive unit
 fun SubscriptionEditorContent(
     initial: Subscription?,
     categories: List<SubscriptionCategory>,
