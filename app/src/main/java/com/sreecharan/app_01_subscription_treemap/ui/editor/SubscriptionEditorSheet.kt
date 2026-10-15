@@ -121,18 +121,20 @@ fun SubscriptionEditorContent(
     var showDatePicker by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = AppDimens.spacing16)
-            .padding(bottom = AppDimens.spacing24),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = AppDimens.spacing16)
+                .padding(bottom = AppDimens.spacing24),
         verticalArrangement = Arrangement.spacedBy(AppDimens.spacing16),
     ) {
         Text(
-            text = stringResource(
-                if (initial == null) R.string.editor_title_add else R.string.editor_title_edit,
-            ),
+            text =
+                stringResource(
+                    if (initial == null) R.string.editor_title_add else R.string.editor_title_edit,
+                ),
             style = AppTypography.title2,
             color = colors.label,
         )
@@ -144,16 +146,18 @@ fun SubscriptionEditorContent(
             },
             label = { Text(stringResource(R.string.field_name)) },
             isError = nameError,
-            supportingText = if (nameError) {
-                { Text(stringResource(R.string.error_name_blank)) }
-            } else {
-                null
-            },
+            supportingText =
+                if (nameError) {
+                    { Text(stringResource(R.string.error_name_blank)) }
+                } else {
+                    null
+                },
             singleLine = true,
             shape = AppShapes.card,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("editor_name_field"),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .testTag("editor_name_field"),
         )
         OutlinedTextField(
             value = amountText,
@@ -164,17 +168,19 @@ fun SubscriptionEditorContent(
             label = { Text(stringResource(R.string.field_amount)) },
             prefix = { Text(stringResource(R.string.currency_symbol)) },
             isError = amountError,
-            supportingText = if (amountError) {
-                { Text(stringResource(R.string.error_amount_invalid)) }
-            } else {
-                null
-            },
+            supportingText =
+                if (amountError) {
+                    { Text(stringResource(R.string.error_amount_invalid)) }
+                } else {
+                    null
+                },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             shape = AppShapes.card,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("editor_amount_field"),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .testTag("editor_amount_field"),
         )
         FieldLabel(text = stringResource(R.string.field_cycle))
         CycleSelector(
@@ -197,9 +203,10 @@ fun SubscriptionEditorContent(
             label = { Text(stringResource(R.string.field_notes)) },
             shape = AppShapes.card,
             minLines = 2,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("editor_notes_field"),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .testTag("editor_notes_field"),
         )
         Button(
             onClick = {
@@ -221,9 +228,10 @@ fun SubscriptionEditorContent(
                 }
             },
             shape = AppShapes.capsule,
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = AppDimens.rowMinHeight),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = AppDimens.rowMinHeight),
         ) {
             Text(
                 text = stringResource(R.string.action_save),
@@ -233,10 +241,11 @@ fun SubscriptionEditorContent(
         if (initial != null) {
             TextButton(
                 onClick = { showDeleteConfirm = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = AppDimens.rowMinHeight)
-                    .testTag("editor_delete_button"),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = AppDimens.rowMinHeight)
+                        .testTag("editor_delete_button"),
             ) {
                 Text(
                     text = stringResource(R.string.action_delete),
@@ -248,21 +257,29 @@ fun SubscriptionEditorContent(
     }
 
     if (showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = nextBillingEpochDay?.let { day ->
-                LocalDate.ofEpochDay(day).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            },
-        )
+        val datePickerState =
+            rememberDatePickerState(
+                initialSelectedDateMillis =
+                    nextBillingEpochDay?.let { day ->
+                        LocalDate
+                            .ofEpochDay(day)
+                            .atStartOfDay(ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+                    },
+            )
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            nextBillingEpochDay = Instant.ofEpochMilli(millis)
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDate()
-                                .toEpochDay()
+                            nextBillingEpochDay =
+                                Instant
+                                    .ofEpochMilli(millis)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
+                                    .toEpochDay()
                         }
                         showDatePicker = false
                     },
@@ -310,7 +327,10 @@ fun SubscriptionEditorContent(
 }
 
 @Composable
-private fun FieldLabel(text: String, modifier: Modifier = Modifier) {
+private fun FieldLabel(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         text = text,
         style = AppTypography.footnote,
@@ -320,7 +340,11 @@ private fun FieldLabel(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CycleSelector(selected: BillingCycle, onSelect: (BillingCycle) -> Unit, modifier: Modifier = Modifier) {
+private fun CycleSelector(
+    selected: BillingCycle,
+    onSelect: (BillingCycle) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -329,16 +353,17 @@ private fun CycleSelector(selected: BillingCycle, onSelect: (BillingCycle) -> Un
         for (entry in BillingCycle.entries) {
             val isSelected = entry == selected
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(AppDimens.chipHeight)
-                    .clip(AppShapes.capsule)
-                    .background(if (isSelected) colors.accent else colors.groupedBackground)
-                    .selectable(
-                        selected = isSelected,
-                        role = Role.RadioButton,
-                        onClick = { onSelect(entry) },
-                    ),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .height(AppDimens.chipHeight)
+                        .clip(AppShapes.capsule)
+                        .background(if (isSelected) colors.accent else colors.groupedBackground)
+                        .selectable(
+                            selected = isSelected,
+                            role = Role.RadioButton,
+                            onClick = { onSelect(entry) },
+                        ),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -367,27 +392,28 @@ private fun CategorySelector(
         for (category in categories) {
             val isSelected = category == selected
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = AppDimens.rowMinHeight)
-                    .clip(AppShapes.card)
-                    .selectable(
-                        selected = isSelected,
-                        role = Role.RadioButton,
-                        onClick = { onSelect(category) },
-                    )
-                    .padding(
-                        horizontal = AppDimens.spacing12,
-                        vertical = AppDimens.spacing8,
-                    ),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = AppDimens.rowMinHeight)
+                        .clip(AppShapes.card)
+                        .selectable(
+                            selected = isSelected,
+                            role = Role.RadioButton,
+                            onClick = { onSelect(category) },
+                        ).padding(
+                            horizontal = AppDimens.spacing12,
+                            vertical = AppDimens.spacing8,
+                        ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(AppDimens.spacing12)
-                        .clip(CircleShape)
-                        .background(CategoryColors.colorFor(category)),
+                    modifier =
+                        Modifier
+                            .size(AppDimens.spacing12)
+                            .clip(CircleShape)
+                            .background(CategoryColors.colorFor(category)),
                 )
                 Text(
                     text = category.displayName,
@@ -409,7 +435,11 @@ private fun CategorySelector(
 }
 
 @Composable
-private fun NextBillingRow(epochDay: Long?, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun NextBillingRow(
+    epochDay: Long?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -417,16 +447,17 @@ private fun NextBillingRow(epochDay: Long?, onClick: () -> Unit, modifier: Modif
     ) {
         FieldLabel(text = stringResource(R.string.field_next_billing))
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = AppDimens.rowMinHeight)
-                .clip(AppShapes.card)
-                .background(colors.groupedBackground)
-                .clickable(role = Role.Button, onClick = onClick)
-                .padding(
-                    horizontal = AppDimens.spacing16,
-                    vertical = AppDimens.spacing8,
-                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = AppDimens.rowMinHeight)
+                    .clip(AppShapes.card)
+                    .background(colors.groupedBackground)
+                    .clickable(role = Role.Button, onClick = onClick)
+                    .padding(
+                        horizontal = AppDimens.spacing16,
+                        vertical = AppDimens.spacing8,
+                    ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
         ) {

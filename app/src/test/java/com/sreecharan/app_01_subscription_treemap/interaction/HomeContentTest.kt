@@ -31,7 +31,6 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class HomeContentTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
@@ -40,43 +39,48 @@ class HomeContentTest {
         name: String,
         amount: Double,
         category: SubscriptionCategory,
-    ): Subscription = Subscription(
-        id = id,
-        name = name,
-        amount = amount,
-        cycle = BillingCycle.MONTHLY,
-        category = category,
-        nextBillingEpochDay = 20_370L,
-        notes = "",
-        createdAt = 1_760_000_000_000L,
-        updatedAt = 1_760_000_000_000L,
-    )
+    ): Subscription =
+        Subscription(
+            id = id,
+            name = name,
+            amount = amount,
+            cycle = BillingCycle.MONTHLY,
+            category = category,
+            nextBillingEpochDay = 20_370L,
+            notes = "",
+            createdAt = 1_760_000_000_000L,
+            updatedAt = 1_760_000_000_000L,
+        )
 
-    private val sampleSubscriptions = listOf(
-        fixtureSubscription(1, "Netflix", 17.99, SubscriptionCategory.STREAMING),
-        fixtureSubscription(2, "Spotify", 11.99, SubscriptionCategory.MUSIC),
-        fixtureSubscription(3, "iCloud+", 2.99, SubscriptionCategory.CLOUD),
-    )
+    private val sampleSubscriptions =
+        listOf(
+            fixtureSubscription(1, "Netflix", 17.99, SubscriptionCategory.STREAMING),
+            fixtureSubscription(2, "Spotify", 11.99, SubscriptionCategory.MUSIC),
+            fixtureSubscription(3, "iCloud+", 2.99, SubscriptionCategory.CLOUD),
+        )
 
-    private val sampleTiles = listOf(
-        TreemapTile(subscriptionId = 1, x = 0f, y = 0f, width = 0.5f, height = 1f),
-        TreemapTile(subscriptionId = 2, x = 0.5f, y = 0f, width = 0.5f, height = 0.5f),
-        TreemapTile(subscriptionId = 3, x = 0.5f, y = 0.5f, width = 0.5f, height = 0.5f),
-    ).toImmutableList()
+    private val sampleTiles =
+        listOf(
+            TreemapTile(subscriptionId = 1, x = 0f, y = 0f, width = 0.5f, height = 1f),
+            TreemapTile(subscriptionId = 2, x = 0.5f, y = 0f, width = 0.5f, height = 0.5f),
+            TreemapTile(subscriptionId = 3, x = 0.5f, y = 0.5f, width = 0.5f, height = 0.5f),
+        ).toImmutableList()
 
-    private fun baseState() = HomeUiState(
-        isLoading = false,
-        subscriptions = sampleSubscriptions.toImmutableList(),
-        tiles = sampleTiles,
-        totalMonthly = 32.97,
-        totalYearly = 395.64,
-        categoriesPresent = persistentListOf(
-            SubscriptionCategory.STREAMING,
-            SubscriptionCategory.MUSIC,
-            SubscriptionCategory.CLOUD,
-        ),
-        unacknowledgedHikeCount = 2,
-    )
+    private fun baseState() =
+        HomeUiState(
+            isLoading = false,
+            subscriptions = sampleSubscriptions.toImmutableList(),
+            tiles = sampleTiles,
+            totalMonthly = 32.97,
+            totalYearly = 395.64,
+            categoriesPresent =
+                persistentListOf(
+                    SubscriptionCategory.STREAMING,
+                    SubscriptionCategory.MUSIC,
+                    SubscriptionCategory.CLOUD,
+                ),
+            unacknowledgedHikeCount = 2,
+        )
 
     private fun render(
         state: HomeUiState,

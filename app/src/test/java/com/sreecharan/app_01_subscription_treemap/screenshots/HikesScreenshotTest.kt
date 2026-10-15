@@ -21,32 +21,32 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class HikesScreenshotTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
-    private val sampleHikes = persistentListOf(
-        PriceHike(
-            id = 1,
-            subscriptionId = 1,
-            subscriptionName = "Netflix",
-            oldAmount = 15.49,
-            newAmount = 17.99,
-            cycle = BillingCycle.MONTHLY,
-            detectedAt = 1_760_000_000_000L,
-            acknowledged = false,
-        ),
-        PriceHike(
-            id = 2,
-            subscriptionId = 4,
-            subscriptionName = "HBO Max",
-            oldAmount = 15.99,
-            newAmount = 16.99,
-            cycle = BillingCycle.MONTHLY,
-            detectedAt = 1_759_900_000_000L,
-            acknowledged = false,
-        ),
-    )
+    private val sampleHikes =
+        persistentListOf(
+            PriceHike(
+                id = 1,
+                subscriptionId = 1,
+                subscriptionName = "Netflix",
+                oldAmount = 15.49,
+                newAmount = 17.99,
+                cycle = BillingCycle.MONTHLY,
+                detectedAt = 1_760_000_000_000L,
+                acknowledged = false,
+            ),
+            PriceHike(
+                id = 2,
+                subscriptionId = 4,
+                subscriptionName = "HBO Max",
+                oldAmount = 15.99,
+                newAmount = 16.99,
+                cycle = BillingCycle.MONTHLY,
+                detectedAt = 1_759_900_000_000L,
+                acknowledged = false,
+            ),
+        )
 
     @Test
     fun hikes_light() {
@@ -75,7 +75,11 @@ class HikesScreenshotTest {
         )
     }
 
-    private fun capture(darkTheme: Boolean, state: HikesUiState, name: String) {
+    private fun capture(
+        darkTheme: Boolean,
+        state: HikesUiState,
+        name: String,
+    ) {
         composeRule.setContent {
             AppTheme(darkTheme = darkTheme, hapticsEnabled = false) {
                 HikesScreenContent(

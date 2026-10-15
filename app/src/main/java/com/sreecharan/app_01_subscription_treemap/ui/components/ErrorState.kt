@@ -30,13 +30,18 @@ import com.sreecharan.app_01_subscription_treemap.ui.theme.rememberHapticTick
  * the failure into a human message; raw codes never reach this screen.
  */
 @Composable
-fun ErrorState(message: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorState(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     val tick = rememberHapticTick()
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(AppDimens.spacing32),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(AppDimens.spacing32),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

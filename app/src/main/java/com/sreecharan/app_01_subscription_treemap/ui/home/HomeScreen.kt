@@ -85,7 +85,10 @@ private val TileMinTextHeight = 44.dp
  * snackbar, and forwards events. The content below stays stateless.
  */
 @Composable
-fun HomeRoute(onNavigateToHikes: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeRoute(
+    onNavigateToHikes: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(viewModel) {
@@ -185,41 +188,54 @@ private fun HomeScaffoldContent(
     onRetry: () -> Unit,
 ) {
     when {
-        state.isLoading -> SkeletonList(
-            contentPadding = PaddingValues(
-                top = padding.calculateTopPadding(),
-                bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
-            ),
-        )
+        state.isLoading -> {
+            SkeletonList(
+                contentPadding =
+                    PaddingValues(
+                        top = padding.calculateTopPadding(),
+                        bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
+                    ),
+            )
+        }
 
-        state.errorMessage != null -> ErrorState(
-            message = state.errorMessage,
-            onRetry = onRetry,
-            modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
-        )
+        state.errorMessage != null -> {
+            ErrorState(
+                message = state.errorMessage,
+                onRetry = onRetry,
+                modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
+            )
+        }
 
-        state.subscriptions.isEmpty() && state.selectedCategory == null -> EmptyState(
-            title = stringResource(R.string.empty_title),
-            message = stringResource(R.string.empty_message),
-            actionLabel = stringResource(R.string.action_add_subscription),
-            onAction = onAddClick,
-            icon = Icons.Outlined.Dashboard,
-            modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
-        )
+        state.subscriptions.isEmpty() && state.selectedCategory == null -> {
+            EmptyState(
+                title = stringResource(R.string.empty_title),
+                message = stringResource(R.string.empty_message),
+                actionLabel = stringResource(R.string.action_add_subscription),
+                onAction = onAddClick,
+                icon = Icons.Outlined.Dashboard,
+                modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
+            )
+        }
 
-        else -> HomeContentBody(
-            state = state,
-            onCategorySelected = onCategorySelected,
-            onSubscriptionClick = onSubscriptionClick,
-            onNavigateToHikes = onNavigateToHikes,
-            contentPadding = padding,
-        )
+        else -> {
+            HomeContentBody(
+                state = state,
+                onCategorySelected = onCategorySelected,
+                onSubscriptionClick = onSubscriptionClick,
+                onNavigateToHikes = onNavigateToHikes,
+                contentPadding = padding,
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeTopBar(scrollBehavior: TopAppBarScrollBehavior, colors: AppColors, onAddClick: () -> Unit) {
+private fun HomeTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    colors: AppColors,
+    onAddClick: () -> Unit,
+) {
     LargeTopAppBar(
         title = {
             Text(
@@ -237,10 +253,11 @@ private fun HomeTopBar(scrollBehavior: TopAppBarScrollBehavior, colors: AppColor
             }
         },
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colors.groupedBackground,
-            scrolledContainerColor = colors.groupedBackground,
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = colors.groupedBackground,
+                scrolledContainerColor = colors.groupedBackground,
+            ),
     )
 }
 
@@ -255,15 +272,15 @@ private fun HomeContentBody(
 ) {
     val colors = LocalAppColors.current
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(colors.groupedBackground)
-            .verticalScroll(rememberScrollState())
-            .padding(
-                top = contentPadding.calculateTopPadding(),
-                bottom = contentPadding.calculateBottomPadding() + AppDimens.tabBarClearance,
-            )
-            .padding(horizontal = AppDimens.screenMargin),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(colors.groupedBackground)
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding() + AppDimens.tabBarClearance,
+                ).padding(horizontal = AppDimens.screenMargin),
         verticalArrangement = Arrangement.spacedBy(AppDimens.spacing16),
     ) {
         SummaryHeader(
@@ -299,7 +316,11 @@ private fun HomeContentBody(
 }
 
 @Composable
-private fun SummaryHeader(totalMonthly: Double, totalYearly: Double, modifier: Modifier = Modifier) {
+private fun SummaryHeader(
+    totalMonthly: Double,
+    totalYearly: Double,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     Column(
         modifier = modifier,
@@ -324,16 +345,21 @@ private fun SummaryHeader(totalMonthly: Double, totalYearly: Double, modifier: M
 }
 
 @Composable
-private fun HikeBanner(count: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun HikeBanner(
+    count: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(AppShapes.card)
-            .background(colors.warning.copy(alpha = 0.15f))
-            .clickable(onClick = onClick)
-            .testTag("banner_hikes")
-            .padding(AppDimens.spacing16),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(AppShapes.card)
+                .background(colors.warning.copy(alpha = 0.15f))
+                .clickable(onClick = onClick)
+                .testTag("banner_hikes")
+                .padding(AppDimens.spacing16),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
     ) {
@@ -372,9 +398,10 @@ private fun CategoryChipsRow(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing8),
     ) {
         CategoryChip(
@@ -405,20 +432,20 @@ private fun CategoryChip(
     val colors = LocalAppColors.current
     val tick = rememberHapticTick()
     Box(
-        modifier = modifier
-            .height(AppDimens.chipHeight)
-            .clip(AppShapes.capsule)
-            .background(if (selected) colors.accent else colors.cardSurface)
-            .selectable(
-                selected = selected,
-                role = Role.RadioButton,
-                onClick = {
-                    tick()
-                    onClick()
-                },
-            )
-            .testTag(testTag)
-            .padding(horizontal = AppDimens.spacing16),
+        modifier =
+            modifier
+                .height(AppDimens.chipHeight)
+                .clip(AppShapes.capsule)
+                .background(if (selected) colors.accent else colors.cardSurface)
+                .selectable(
+                    selected = selected,
+                    role = Role.RadioButton,
+                    onClick = {
+                        tick()
+                        onClick()
+                    },
+                ).testTag(testTag)
+                .padding(horizontal = AppDimens.spacing16),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -445,11 +472,12 @@ private fun TreemapCard(
     val colors = LocalAppColors.current
     val byId = remember(subscriptions) { subscriptions.associateBy { it.id } }
     BoxWithConstraints(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(4f / 3f)
-            .clip(AppShapes.card)
-            .background(colors.cardSurface),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .aspectRatio(4f / 3f)
+                .clip(AppShapes.card)
+                .background(colors.cardSurface),
     ) {
         for (tile in tiles) {
             val subscription = byId[tile.subscriptionId] ?: continue
@@ -475,23 +503,24 @@ private fun BoxWithConstraintsScope.TreemapTile(
     val tileWidth = maxWidth * tile.width
     val tileHeight = maxHeight * tile.height
     Box(
-        modifier = Modifier
-            .offset(x = maxWidth * tile.x, y = maxHeight * tile.y)
-            .size(width = tileWidth, height = tileHeight)
-            .clip(RoundedCornerShape(6.dp))
-            .testTag("treemap_tile_${tile.subscriptionId}")
-            .semantics(mergeDescendants = true) {
-                contentDescription = subscription.name
-            }
-            .clickable { onTileClick(tile.subscriptionId) },
+        modifier =
+            Modifier
+                .offset(x = maxWidth * tile.x, y = maxHeight * tile.y)
+                .size(width = tileWidth, height = tileHeight)
+                .clip(RoundedCornerShape(6.dp))
+                .testTag("treemap_tile_${tile.subscriptionId}")
+                .semantics(mergeDescendants = true) {
+                    contentDescription = subscription.name
+                }.clickable { onTileClick(tile.subscriptionId) },
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(2.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(CategoryColors.colorFor(subscription.category))
-                .padding(AppDimens.spacing8),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(2.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(CategoryColors.colorFor(subscription.category))
+                    .padding(AppDimens.spacing8),
             contentAlignment = Alignment.TopStart,
         ) {
             if (tileWidth >= TileMinTextWidth && tileHeight >= TileMinTextHeight) {
@@ -504,10 +533,11 @@ private fun BoxWithConstraintsScope.TreemapTile(
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        text = stringResource(
-                            R.string.per_month_short,
-                            formatUsd(subscription.monthlyAmount),
-                        ),
+                        text =
+                            stringResource(
+                                R.string.per_month_short,
+                                formatUsd(subscription.monthlyAmount),
+                            ),
                         style = AppTypography.footnote,
                         color = Color.White.copy(alpha = 0.85f),
                         maxLines = 1,

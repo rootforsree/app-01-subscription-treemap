@@ -22,7 +22,6 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class DetailScreenshotTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
@@ -31,27 +30,29 @@ class DetailScreenshotTest {
         composeRule.setContent {
             AppTheme(darkTheme = false, hapticsEnabled = false) {
                 SubscriptionDetailContent(
-                    subscription = Subscription(
-                        id = 1,
-                        name = "Netflix",
-                        amount = 17.99,
-                        cycle = BillingCycle.MONTHLY,
-                        category = SubscriptionCategory.STREAMING,
-                        nextBillingEpochDay = 20_370L,
-                        notes = "Standard plan.",
-                        createdAt = 1_760_000_000_000L,
-                        updatedAt = 1_760_000_000_000L,
-                    ),
-                    latestHike = PriceHike(
-                        id = 1,
-                        subscriptionId = 1,
-                        subscriptionName = "Netflix",
-                        oldAmount = 15.49,
-                        newAmount = 17.99,
-                        cycle = BillingCycle.MONTHLY,
-                        detectedAt = 1_760_000_000_000L,
-                        acknowledged = false,
-                    ),
+                    subscription =
+                        Subscription(
+                            id = 1,
+                            name = "Netflix",
+                            amount = 17.99,
+                            cycle = BillingCycle.MONTHLY,
+                            category = SubscriptionCategory.STREAMING,
+                            nextBillingEpochDay = 20_370L,
+                            notes = "Standard plan.",
+                            createdAt = 1_760_000_000_000L,
+                            updatedAt = 1_760_000_000_000L,
+                        ),
+                    latestHike =
+                        PriceHike(
+                            id = 1,
+                            subscriptionId = 1,
+                            subscriptionName = "Netflix",
+                            oldAmount = 15.49,
+                            newAmount = 17.99,
+                            cycle = BillingCycle.MONTHLY,
+                            detectedAt = 1_760_000_000_000L,
+                            acknowledged = false,
+                        ),
                     onEdit = {},
                     onDelete = {},
                     onDismiss = {},

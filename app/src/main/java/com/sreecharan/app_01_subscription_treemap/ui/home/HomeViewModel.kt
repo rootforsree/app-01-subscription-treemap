@@ -33,7 +33,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private data class DetailData(val subscription: Subscription?, val latestHike: PriceHike?)
+private data class DetailData(
+    val subscription: Subscription?,
+    val latestHike: PriceHike?,
+)
 
 /**
  * Home screen state owner. Combines the subscription list, the unacknowledged
@@ -41,184 +44,190 @@ private data class DetailData(val subscription: Subscription?, val latestHike: P
  * atomic [HomeUiState]; the treemap layout runs on the IO dispatcher.
  */
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val subscriptionsRepository: SubscriptionsRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @ApplicationContext private val appContext: Context,
-) : ViewModel() {
+class HomeViewModel
+    @Inject
+    constructor(
+        private val subscriptionsRepository: SubscriptionsRepository,
+        @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+        @ApplicationContext private val appContext: Context,
+    ) : ViewModel() {
+        private val selectedCategoryFlow = MutableStateFlow<SubscriptionCategory?>(null)
+        private val showAddSheetFlow = MutableStateFlow(false)
+        private val editingSubscriptionFlow = MutableStateFlow<Subscription?>(null)
+        private val detailSubscriptionIdFlow = MutableStateFlow<Long?>(null)
+        private val refreshingFlow = MutableStateFlow(false)
+        private val seedErrorFlow = MutableStateFlow<String?>(null)
 
-    private val selectedCategoryFlow = MutableStateFlow<SubscriptionCategory?>(null)
-    private val showAddSheetFlow = MutableStateFlow(false)
-    private val editingSubscriptionFlow = MutableStateFlow<Subscription?>(null)
-    private val detailSubscriptionIdFlow = MutableStateFlow<Long?>(null)
-    private val refreshingFlow = MutableStateFlow(false)
-    private val seedErrorFlow = MutableStateFlow<String?>(null)
+        private val eventsChannel = Channel<String>(Channel.BUFFERED)
 
-    private val eventsChannel = Channel<String>(Channel.BUFFERED)
+        /** One-shot UI events (snackbars). Collected once in the route. */
+        val events: Flow<String> = eventsChannel.receiveAsFlow()
 
-    /** One-shot UI events (snackbars). Collected once in the route. */
-    val events: Flow<String> = eventsChannel.receiveAsFlow()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val detailFlow: Flow<DetailData> = detailSubscriptionIdFlow.flatMapLatest { id ->
-        if (id == null) {
-            flowOf(DetailData(subscription = null, latestHike = null))
-        } else {
-            combine(
-                subscriptionsRepository.observeSubscription(id),
-                subscriptionsRepository.observeAllHikes(),
-            ) { subscription, hikes ->
-                DetailData(
-                    subscription = subscription,
-                    latestHike = hikes
-                        .filter { it.subscriptionId == id }
-                        .maxByOrNull { it.detectedAt },
-                )
-            }
-        }
-    }
-
-    private data class UiInputs1(
-        val subscriptions: List<Subscription>,
-        val unacknowledgedHikes: List<PriceHike>,
-        val selectedCategory: SubscriptionCategory?,
-        val showAddSheet: Boolean,
-    )
-
-    private data class UiInputs2(
-        val editing: Subscription?,
-        val detail: DetailData,
-        val isRefreshing: Boolean,
-        val seedError: String?,
-    )
-
-    val uiState: StateFlow<HomeUiState> = combine(
-        combine(
-            subscriptionsRepository.observeSubscriptions(),
-            subscriptionsRepository.observeUnacknowledgedHikes(),
-            selectedCategoryFlow,
-            showAddSheetFlow,
-        ) { subscriptions, unacknowledgedHikes, selectedCategory, showAddSheet ->
-            UiInputs1(subscriptions, unacknowledgedHikes, selectedCategory, showAddSheet)
-        },
-        combine(
-            editingSubscriptionFlow,
-            detailFlow,
-            refreshingFlow,
-            seedErrorFlow,
-        ) { editing, detail, isRefreshing, seedError ->
-            UiInputs2(editing, detail, isRefreshing, seedError)
-        },
-    ) { inputs1, inputs2 ->
-        val subscriptions = inputs1.subscriptions
-        val unacknowledgedHikes = inputs1.unacknowledgedHikes
-        val selectedCategory = inputs1.selectedCategory
-        val showAddSheet = inputs1.showAddSheet
-        val editing = inputs2.editing
-        val detail = inputs2.detail
-        val isRefreshing = inputs2.isRefreshing
-        val seedError = inputs2.seedError
-        val filtered = if (selectedCategory == null) {
-            subscriptions
-        } else {
-            subscriptions.filter { it.category == selectedCategory }
-        }
-        val weights = filtered.associate { it.id to it.monthlyAmount.toFloat() }
-        HomeUiState(
-            isLoading = isRefreshing,
-            subscriptions = filtered.toImmutableList(),
-            tiles = squarifiedTreemap(weights, 1f, 1f).toImmutableList(),
-            totalMonthly = subscriptions.sumOf { it.monthlyAmount },
-            totalYearly = subscriptions.sumOf { it.yearlyAmount },
-            categoriesPresent = subscriptions.map { it.category }.distinct().toImmutableList(),
-            selectedCategory = selectedCategory,
-            unacknowledgedHikeCount = unacknowledgedHikes.size,
-            errorMessage = seedError,
-            showAddSheet = showAddSheet,
-            editingSubscription = editing,
-            detailSubscriptionId = detail.subscription?.id,
-            detailSubscription = detail.subscription,
-            detailLatestHike = detail.latestHike,
-        )
-    }
-        .flowOn(ioDispatcher)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = HomeUiState(isLoading = true),
-        )
-
-    init {
-        viewModelScope.launch {
-            seed()
-        }
-    }
-
-    fun onCategorySelected(category: SubscriptionCategory?) {
-        selectedCategoryFlow.value = category
-    }
-
-    fun onAddClick() {
-        showAddSheetFlow.value = true
-    }
-
-    fun onSubscriptionClick(id: Long) {
-        detailSubscriptionIdFlow.value = id
-    }
-
-    fun onDetailDismiss() {
-        detailSubscriptionIdFlow.value = null
-    }
-
-    fun onEditorDismiss() {
-        showAddSheetFlow.value = false
-        editingSubscriptionFlow.value = null
-    }
-
-    fun onEditSubscription(subscription: Subscription) {
-        editingSubscriptionFlow.value = subscription
-    }
-
-    fun onEditFromDetail(subscription: Subscription) {
-        detailSubscriptionIdFlow.value = null
-        editingSubscriptionFlow.value = subscription
-    }
-
-    fun onRetry() {
-        viewModelScope.launch {
-            refreshingFlow.value = true
-            seedErrorFlow.value = null
-            seed()
-            refreshingFlow.value = false
-        }
-    }
-
-    fun saveSubscription(input: SubscriptionInput) {
-        viewModelScope.launch {
-            when (subscriptionsRepository.saveSubscription(input)) {
-                is SaveResult.HikeDetected -> {
-                    onEditorDismiss()
-                    eventsChannel.send(appContext.getString(R.string.snack_hike_recorded))
+        @OptIn(ExperimentalCoroutinesApi::class)
+        private val detailFlow: Flow<DetailData> =
+            detailSubscriptionIdFlow.flatMapLatest { id ->
+                if (id == null) {
+                    flowOf(DetailData(subscription = null, latestHike = null))
+                } else {
+                    combine(
+                        subscriptionsRepository.observeSubscription(id),
+                        subscriptionsRepository.observeAllHikes(),
+                    ) { subscription, hikes ->
+                        DetailData(
+                            subscription = subscription,
+                            latestHike =
+                                hikes
+                                    .filter { it.subscriptionId == id }
+                                    .maxByOrNull { it.detectedAt },
+                        )
+                    }
                 }
+            }
 
-                SaveResult.Saved -> onEditorDismiss()
+        private data class UiInputs1(
+            val subscriptions: List<Subscription>,
+            val unacknowledgedHikes: List<PriceHike>,
+            val selectedCategory: SubscriptionCategory?,
+            val showAddSheet: Boolean,
+        )
+
+        private data class UiInputs2(
+            val editing: Subscription?,
+            val detail: DetailData,
+            val isRefreshing: Boolean,
+            val seedError: String?,
+        )
+
+        val uiState: StateFlow<HomeUiState> =
+            combine(
+                combine(
+                    subscriptionsRepository.observeSubscriptions(),
+                    subscriptionsRepository.observeUnacknowledgedHikes(),
+                    selectedCategoryFlow,
+                    showAddSheetFlow,
+                ) { subscriptions, unacknowledgedHikes, selectedCategory, showAddSheet ->
+                    UiInputs1(subscriptions, unacknowledgedHikes, selectedCategory, showAddSheet)
+                },
+                combine(
+                    editingSubscriptionFlow,
+                    detailFlow,
+                    refreshingFlow,
+                    seedErrorFlow,
+                ) { editing, detail, isRefreshing, seedError ->
+                    UiInputs2(editing, detail, isRefreshing, seedError)
+                },
+            ) { inputs1, inputs2 ->
+                val subscriptions = inputs1.subscriptions
+                val unacknowledgedHikes = inputs1.unacknowledgedHikes
+                val selectedCategory = inputs1.selectedCategory
+                val showAddSheet = inputs1.showAddSheet
+                val editing = inputs2.editing
+                val detail = inputs2.detail
+                val isRefreshing = inputs2.isRefreshing
+                val seedError = inputs2.seedError
+                val filtered =
+                    if (selectedCategory == null) {
+                        subscriptions
+                    } else {
+                        subscriptions.filter { it.category == selectedCategory }
+                    }
+                val weights = filtered.associate { it.id to it.monthlyAmount.toFloat() }
+                HomeUiState(
+                    isLoading = isRefreshing,
+                    subscriptions = filtered.toImmutableList(),
+                    tiles = squarifiedTreemap(weights, 1f, 1f).toImmutableList(),
+                    totalMonthly = subscriptions.sumOf { it.monthlyAmount },
+                    totalYearly = subscriptions.sumOf { it.yearlyAmount },
+                    categoriesPresent = subscriptions.map { it.category }.distinct().toImmutableList(),
+                    selectedCategory = selectedCategory,
+                    unacknowledgedHikeCount = unacknowledgedHikes.size,
+                    errorMessage = seedError,
+                    showAddSheet = showAddSheet,
+                    editingSubscription = editing,
+                    detailSubscriptionId = detail.subscription?.id,
+                    detailSubscription = detail.subscription,
+                    detailLatestHike = detail.latestHike,
+                )
+            }.flowOn(ioDispatcher)
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = HomeUiState(isLoading = true),
+                )
+
+        init {
+            viewModelScope.launch {
+                seed()
+            }
+        }
+
+        fun onCategorySelected(category: SubscriptionCategory?) {
+            selectedCategoryFlow.value = category
+        }
+
+        fun onAddClick() {
+            showAddSheetFlow.value = true
+        }
+
+        fun onSubscriptionClick(id: Long) {
+            detailSubscriptionIdFlow.value = id
+        }
+
+        fun onDetailDismiss() {
+            detailSubscriptionIdFlow.value = null
+        }
+
+        fun onEditorDismiss() {
+            showAddSheetFlow.value = false
+            editingSubscriptionFlow.value = null
+        }
+
+        fun onEditSubscription(subscription: Subscription) {
+            editingSubscriptionFlow.value = subscription
+        }
+
+        fun onEditFromDetail(subscription: Subscription) {
+            detailSubscriptionIdFlow.value = null
+            editingSubscriptionFlow.value = subscription
+        }
+
+        fun onRetry() {
+            viewModelScope.launch {
+                refreshingFlow.value = true
+                seedErrorFlow.value = null
+                seed()
+                refreshingFlow.value = false
+            }
+        }
+
+        fun saveSubscription(input: SubscriptionInput) {
+            viewModelScope.launch {
+                when (subscriptionsRepository.saveSubscription(input)) {
+                    is SaveResult.HikeDetected -> {
+                        onEditorDismiss()
+                        eventsChannel.send(appContext.getString(R.string.snack_hike_recorded))
+                    }
+
+                    SaveResult.Saved -> {
+                        onEditorDismiss()
+                    }
+                }
+            }
+        }
+
+        fun deleteSubscription(id: Long) {
+            viewModelScope.launch {
+                subscriptionsRepository.deleteSubscription(id)
+                onEditorDismiss()
+                onDetailDismiss()
+            }
+        }
+
+        private suspend fun seed() {
+            try {
+                subscriptionsRepository.seedIfNeeded()
+            } catch (_: Exception) {
+                seedErrorFlow.value = appContext.getString(R.string.home_error_message)
             }
         }
     }
-
-    fun deleteSubscription(id: Long) {
-        viewModelScope.launch {
-            subscriptionsRepository.deleteSubscription(id)
-            onEditorDismiss()
-            onDetailDismiss()
-        }
-    }
-
-    private suspend fun seed() {
-        try {
-            subscriptionsRepository.seedIfNeeded()
-        } catch (_: Exception) {
-            seedErrorFlow.value = appContext.getString(R.string.home_error_message)
-        }
-    }
-}

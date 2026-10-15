@@ -37,22 +37,28 @@ private const val SHIMMER_MAX_ALPHA = 1f
 private const val SHIMMER_DURATION_MS = 1200
 
 @Composable
-fun SkeletonList(modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp), rows: Int = 6) {
-    val shimmerAlpha = if (!animationsEnabled(LocalContext.current)) {
-        SHIMMER_STATIC_ALPHA
-    } else {
-        val transition = rememberInfiniteTransition(label = "skeleton")
-        val pulse by transition.animateFloat(
-            initialValue = SHIMMER_MIN_ALPHA,
-            targetValue = SHIMMER_MAX_ALPHA,
-            animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = SHIMMER_DURATION_MS, easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse,
-            ),
-            label = "skeletonAlpha",
-        )
-        pulse
-    }
+fun SkeletonList(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    rows: Int = 6,
+) {
+    val shimmerAlpha =
+        if (!animationsEnabled(LocalContext.current)) {
+            SHIMMER_STATIC_ALPHA
+        } else {
+            val transition = rememberInfiniteTransition(label = "skeleton")
+            val pulse by transition.animateFloat(
+                initialValue = SHIMMER_MIN_ALPHA,
+                targetValue = SHIMMER_MAX_ALPHA,
+                animationSpec =
+                    infiniteRepeatable(
+                        animation = tween(durationMillis = SHIMMER_DURATION_MS, easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse,
+                    ),
+                label = "skeletonAlpha",
+            )
+            pulse
+        }
     InsetGroupedList(
         modifier = modifier,
         contentPadding = contentPadding,
@@ -89,15 +95,20 @@ fun SkeletonList(modifier: Modifier = Modifier, contentPadding: PaddingValues = 
 }
 
 @Composable
-private fun SkeletonBar(widthFraction: Float, height: Dp, alpha: Float) {
+private fun SkeletonBar(
+    widthFraction: Float,
+    height: Dp,
+    alpha: Float,
+) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth(widthFraction)
-            .height(height)
-            .alpha(alpha)
-            .background(
-                color = LocalAppColors.current.secondaryLabel.copy(alpha = 0.25f),
-                shape = RoundedCornerShape(AppDimens.spacing4),
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth(widthFraction)
+                .height(height)
+                .alpha(alpha)
+                .background(
+                    color = LocalAppColors.current.secondaryLabel.copy(alpha = 0.25f),
+                    shape = RoundedCornerShape(AppDimens.spacing4),
+                ),
     )
 }

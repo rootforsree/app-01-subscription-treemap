@@ -19,7 +19,6 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class EditorScreenshotTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
@@ -33,7 +32,10 @@ class EditorScreenshotTest {
         capture(darkTheme = true, name = "editor_add_dark")
     }
 
-    private fun capture(darkTheme: Boolean, name: String) {
+    private fun capture(
+        darkTheme: Boolean,
+        name: String,
+    ) {
         composeRule.setContent {
             AppTheme(darkTheme = darkTheme, hapticsEnabled = false) {
                 SubscriptionEditorContent(

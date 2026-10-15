@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class BillingCycleTest {
-
     private val tolerance = 1e-9
     private val tenDollars = 10.0
     private val twelveFifty = 12.5

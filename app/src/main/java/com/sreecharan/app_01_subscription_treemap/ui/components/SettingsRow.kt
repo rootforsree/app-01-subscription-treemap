@@ -47,31 +47,33 @@ fun SettingsRow(
 ) {
     val colors = LocalAppColors.current
     val tick = rememberHapticTick()
-    val description = contentDescription ?: buildString {
-        append(title)
-        if (subtitle != null) {
-            append(", ")
-            append(subtitle)
-        }
-    }
-    val interaction = interactionModifier(
-        toggleableValue = toggleableValue,
-        selectableSelected = selectableSelected,
-        onClick = onClick,
-        tick = tick,
-    )
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = AppDimens.rowMinHeight)
-            .then(interaction)
-            .semantics(mergeDescendants = true) {
-                this.contentDescription = description
+    val description =
+        contentDescription ?: buildString {
+            append(title)
+            if (subtitle != null) {
+                append(", ")
+                append(subtitle)
             }
-            .padding(
-                horizontal = AppDimens.rowHorizontalPadding,
-                vertical = AppDimens.rowVerticalPadding,
-            ),
+        }
+    val interaction =
+        interactionModifier(
+            toggleableValue = toggleableValue,
+            selectableSelected = selectableSelected,
+            onClick = onClick,
+            tick = tick,
+        )
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = AppDimens.rowMinHeight)
+                .then(interaction)
+                .semantics(mergeDescendants = true) {
+                    this.contentDescription = description
+                }.padding(
+                    horizontal = AppDimens.rowHorizontalPadding,
+                    vertical = AppDimens.rowVerticalPadding,
+                ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
     ) {
@@ -122,32 +124,41 @@ private fun interactionModifier(
     selectableSelected: Boolean?,
     onClick: (() -> Unit)?,
     tick: () -> Unit,
-): Modifier = when {
-    toggleableValue != null -> Modifier.toggleable(
-        value = toggleableValue,
-        role = Role.Switch,
-        onValueChange = {
-            tick()
-            onClick?.invoke()
-        },
-    )
+): Modifier =
+    when {
+        toggleableValue != null -> {
+            Modifier.toggleable(
+                value = toggleableValue,
+                role = Role.Switch,
+                onValueChange = {
+                    tick()
+                    onClick?.invoke()
+                },
+            )
+        }
 
-    selectableSelected != null -> Modifier.selectable(
-        selected = selectableSelected,
-        role = Role.RadioButton,
-        onClick = {
-            tick()
-            onClick?.invoke()
-        },
-    )
+        selectableSelected != null -> {
+            Modifier.selectable(
+                selected = selectableSelected,
+                role = Role.RadioButton,
+                onClick = {
+                    tick()
+                    onClick?.invoke()
+                },
+            )
+        }
 
-    onClick != null -> Modifier.clickable(
-        role = Role.Button,
-        onClick = {
-            tick()
-            onClick()
-        },
-    )
+        onClick != null -> {
+            Modifier.clickable(
+                role = Role.Button,
+                onClick = {
+                    tick()
+                    onClick()
+                },
+            )
+        }
 
-    else -> Modifier
-}
+        else -> {
+            Modifier
+        }
+    }

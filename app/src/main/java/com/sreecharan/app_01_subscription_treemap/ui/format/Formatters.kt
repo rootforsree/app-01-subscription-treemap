@@ -25,7 +25,11 @@ fun formatEpochDay(epochDay: Long): String = LocalDate.ofEpochDay(epochDay).form
 
 /** "Oct 12" from epoch millis. */
 fun formatEpochMillisShort(epochMillis: Long): String =
-    Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()).toLocalDate().format(ShortDateFormat)
+    Instant
+        .ofEpochMilli(epochMillis)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+        .format(ShortDateFormat)
 
 /** "16.1%" — one decimal, US locale. */
 fun formatPercentOneDecimal(value: Double): String = "%.1f%%".format(Locale.US, value)

@@ -15,11 +15,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "subscriptions.db").build()
+    fun provideDatabase(
+        @ApplicationContext context: Context,
+    ): AppDatabase = Room.databaseBuilder(context, AppDatabase::class.java, "subscriptions.db").build()
 
     @Provides
     fun provideSubscriptionDao(database: AppDatabase): SubscriptionDao = database.subscriptionDao()

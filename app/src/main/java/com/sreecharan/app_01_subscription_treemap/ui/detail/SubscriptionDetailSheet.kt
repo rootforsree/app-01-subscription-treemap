@@ -98,20 +98,22 @@ fun SubscriptionDetailContent(
 ) {
     val colors = LocalAppColors.current
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
-    val cycleNoun = when (subscription.cycle) {
-        BillingCycle.WEEKLY -> stringResource(R.string.noun_week)
-        BillingCycle.MONTHLY -> stringResource(R.string.noun_month)
-        BillingCycle.QUARTERLY -> stringResource(R.string.noun_quarter)
-        BillingCycle.YEARLY -> stringResource(R.string.noun_year)
-    }
+    val cycleNoun =
+        when (subscription.cycle) {
+            BillingCycle.WEEKLY -> stringResource(R.string.noun_week)
+            BillingCycle.MONTHLY -> stringResource(R.string.noun_month)
+            BillingCycle.QUARTERLY -> stringResource(R.string.noun_quarter)
+            BillingCycle.YEARLY -> stringResource(R.string.noun_year)
+        }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = AppDimens.spacing16)
-            .padding(bottom = AppDimens.spacing24),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = AppDimens.spacing16)
+                .padding(bottom = AppDimens.spacing24),
         verticalArrangement = Arrangement.spacedBy(AppDimens.spacing16),
     ) {
         Row(
@@ -119,10 +121,11 @@ fun SubscriptionDetailContent(
             horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing8),
         ) {
             Box(
-                modifier = Modifier
-                    .size(AppDimens.spacing12)
-                    .clip(CircleShape)
-                    .background(CategoryColors.colorFor(subscription.category)),
+                modifier =
+                    Modifier
+                        .size(AppDimens.spacing12)
+                        .clip(CircleShape)
+                        .background(CategoryColors.colorFor(subscription.category)),
             )
             Text(
                 text = subscription.category.displayName,
@@ -141,11 +144,12 @@ fun SubscriptionDetailContent(
         GroupCard {
             DetailRow(
                 label = stringResource(R.string.detail_cost),
-                value = stringResource(
-                    R.string.detail_cost_value,
-                    formatUsd(subscription.amount),
-                    cycleNoun,
-                ),
+                value =
+                    stringResource(
+                        R.string.detail_cost_value,
+                        formatUsd(subscription.amount),
+                        cycleNoun,
+                    ),
             )
             RowDivider()
             DetailRow(
@@ -160,8 +164,9 @@ fun SubscriptionDetailContent(
             RowDivider()
             DetailRow(
                 label = stringResource(R.string.detail_next_billing),
-                value = subscription.nextBillingEpochDay?.let { formatEpochDay(it) }
-                    ?: stringResource(R.string.date_none),
+                value =
+                    subscription.nextBillingEpochDay?.let { formatEpochDay(it) }
+                        ?: stringResource(R.string.date_none),
             )
             if (subscription.notes.isNotBlank()) {
                 RowDivider()
@@ -177,9 +182,10 @@ fun SubscriptionDetailContent(
             Button(
                 onClick = onEdit,
                 shape = AppShapes.capsule,
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = AppDimens.rowMinHeight),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .heightIn(min = AppDimens.rowMinHeight),
             ) {
                 Text(
                     text = stringResource(R.string.action_edit),
@@ -188,10 +194,11 @@ fun SubscriptionDetailContent(
             }
             TextButton(
                 onClick = { showDeleteConfirm = true },
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = AppDimens.rowMinHeight)
-                    .testTag("detail_delete_button"),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .heightIn(min = AppDimens.rowMinHeight)
+                        .testTag("detail_delete_button"),
             ) {
                 Text(
                     text = stringResource(R.string.action_delete),
@@ -231,15 +238,20 @@ fun SubscriptionDetailContent(
 }
 
 @Composable
-private fun DetailRow(label: String, value: String, modifier: Modifier = Modifier) {
+private fun DetailRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = AppDimens.spacing16,
-                vertical = AppDimens.spacing12,
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = AppDimens.spacing16,
+                    vertical = AppDimens.spacing12,
+                ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -258,14 +270,18 @@ private fun DetailRow(label: String, value: String, modifier: Modifier = Modifie
 }
 
 @Composable
-private fun HikeWarningRow(hike: PriceHike, modifier: Modifier = Modifier) {
+private fun HikeWarningRow(
+    hike: PriceHike,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(AppShapes.card)
-            .background(colors.warning.copy(alpha = 0.15f))
-            .padding(AppDimens.spacing12),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(AppShapes.card)
+                .background(colors.warning.copy(alpha = 0.15f))
+                .padding(AppDimens.spacing12),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
     ) {
@@ -276,12 +292,13 @@ private fun HikeWarningRow(hike: PriceHike, modifier: Modifier = Modifier) {
             modifier = Modifier.size(AppDimens.iconSize),
         )
         Text(
-            text = stringResource(
-                R.string.detail_hike_increase,
-                formatUsd(hike.oldMonthly),
-                formatUsd(hike.newMonthly),
-                formatPercentOneDecimal(hike.percentIncrease),
-            ),
+            text =
+                stringResource(
+                    R.string.detail_hike_increase,
+                    formatUsd(hike.oldMonthly),
+                    formatUsd(hike.newMonthly),
+                    formatPercentOneDecimal(hike.percentIncrease),
+                ),
             style = AppTypography.subheadline,
             color = colors.label,
         )

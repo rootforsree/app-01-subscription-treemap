@@ -26,7 +26,6 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class TreemapScreenshotTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
@@ -35,32 +34,35 @@ class TreemapScreenshotTest {
         name: String,
         amount: Double,
         category: SubscriptionCategory,
-    ): Subscription = Subscription(
-        id = id,
-        name = name,
-        amount = amount,
-        cycle = BillingCycle.MONTHLY,
-        category = category,
-        nextBillingEpochDay = 20_370L,
-        notes = "",
-        createdAt = 1_760_000_000_000L,
-        updatedAt = 1_760_000_000_000L,
-    )
+    ): Subscription =
+        Subscription(
+            id = id,
+            name = name,
+            amount = amount,
+            cycle = BillingCycle.MONTHLY,
+            category = category,
+            nextBillingEpochDay = 20_370L,
+            notes = "",
+            createdAt = 1_760_000_000_000L,
+            updatedAt = 1_760_000_000_000L,
+        )
 
-    private val sampleSubscriptions = listOf(
-        fixtureSubscription(1, "Netflix", 17.99, SubscriptionCategory.STREAMING),
-        fixtureSubscription(2, "Spotify", 11.99, SubscriptionCategory.MUSIC),
-        fixtureSubscription(3, "iCloud+", 2.99, SubscriptionCategory.CLOUD),
-        fixtureSubscription(4, "Notion", 10.00, SubscriptionCategory.PRODUCTIVITY),
-        fixtureSubscription(5, "Disney+", 13.99, SubscriptionCategory.STREAMING),
-    )
+    private val sampleSubscriptions =
+        listOf(
+            fixtureSubscription(1, "Netflix", 17.99, SubscriptionCategory.STREAMING),
+            fixtureSubscription(2, "Spotify", 11.99, SubscriptionCategory.MUSIC),
+            fixtureSubscription(3, "iCloud+", 2.99, SubscriptionCategory.CLOUD),
+            fixtureSubscription(4, "Notion", 10.00, SubscriptionCategory.PRODUCTIVITY),
+            fixtureSubscription(5, "Disney+", 13.99, SubscriptionCategory.STREAMING),
+        )
 
     private fun stateFor(subscriptions: List<Subscription>): HomeUiState {
-        val tiles = squarifiedTreemap(
-            subscriptions.associate { it.id to it.monthlyAmount.toFloat() },
-            1f,
-            1f,
-        ).toImmutableList()
+        val tiles =
+            squarifiedTreemap(
+                subscriptions.associate { it.id to it.monthlyAmount.toFloat() },
+                1f,
+                1f,
+            ).toImmutableList()
         return HomeUiState(
             isLoading = false,
             subscriptions = subscriptions.toImmutableList(),
@@ -99,10 +101,11 @@ class TreemapScreenshotTest {
     fun home_error() {
         capture(
             darkTheme = false,
-            state = HomeUiState(
-                isLoading = false,
-                errorMessage = "Couldn't load your subscriptions. Check your connection and try again.",
-            ),
+            state =
+                HomeUiState(
+                    isLoading = false,
+                    errorMessage = "Couldn't load your subscriptions. Check your connection and try again.",
+                ),
             name = "home_error",
         )
     }
@@ -121,15 +124,20 @@ class TreemapScreenshotTest {
         val streaming = sampleSubscriptions.filter { it.category == SubscriptionCategory.STREAMING }
         capture(
             darkTheme = false,
-            state = stateFor(streaming).copy(
-                categoriesPresent = sampleSubscriptions.map { it.category }.distinct().toImmutableList(),
-                selectedCategory = SubscriptionCategory.STREAMING,
-            ),
+            state =
+                stateFor(streaming).copy(
+                    categoriesPresent = sampleSubscriptions.map { it.category }.distinct().toImmutableList(),
+                    selectedCategory = SubscriptionCategory.STREAMING,
+                ),
             name = "home_filtered",
         )
     }
 
-    private fun capture(darkTheme: Boolean, state: HomeUiState, name: String) {
+    private fun capture(
+        darkTheme: Boolean,
+        state: HomeUiState,
+        name: String,
+    ) {
         composeRule.setContent {
             AppTheme(darkTheme = darkTheme, hapticsEnabled = false) {
                 val snackbarHostState = remember { SnackbarHostState() }

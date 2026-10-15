@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PriceHikeDao {
-
     @Query("SELECT * FROM price_hikes WHERE acknowledged = 0 ORDER BY detectedAt DESC")
     fun observeUnacknowledged(): Flow<List<PriceHikeEntity>>
 

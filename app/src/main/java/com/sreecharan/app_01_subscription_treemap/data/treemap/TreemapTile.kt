@@ -11,7 +11,13 @@ private const val FULL_EXTENT = 1f
  * ([x], [y] in 0..1), [width] and [height] are fractions too.
  */
 @Immutable
-data class TreemapTile(val subscriptionId: Long, val x: Float, val y: Float, val width: Float, val height: Float)
+data class TreemapTile(
+    val subscriptionId: Long,
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+)
 
 /**
  * Squarified treemap layout (Bruls, Huizing, van Wijk).
@@ -29,12 +35,19 @@ data class TreemapTile(val subscriptionId: Long, val x: Float, val y: Float, val
  * [weights] maps subscription id to its weight. [width] and [height] are the
  * container size; the returned tiles hold fractional coordinates.
  */
-fun squarifiedTreemap(weights: Map<Long, Float>, width: Float, height: Float): List<TreemapTile> {
-    val entries = weights.entries
-        .filter { it.value > MIN_POSITIVE_WEIGHT }
-        .sortedByDescending { it.value }
+fun squarifiedTreemap(
+    weights: Map<Long, Float>,
+    width: Float,
+    height: Float,
+): List<TreemapTile> {
+    val entries =
+        weights.entries
+            .filter { it.value > MIN_POSITIVE_WEIGHT }
+            .sortedByDescending { it.value }
     return when {
-        entries.isEmpty() || width <= ORIGIN || height <= ORIGIN -> emptyList()
+        entries.isEmpty() || width <= ORIGIN || height <= ORIGIN -> {
+            emptyList()
+        }
 
         entries.size == 1 -> {
             val single = entries.first()
@@ -49,13 +62,23 @@ fun squarifiedTreemap(weights: Map<Long, Float>, width: Float, height: Float): L
             )
         }
 
-        else -> layoutRows(entries)
+        else -> {
+            layoutRows(entries)
+        }
     }
 }
 
-private data class Scaled(val id: Long, val area: Float)
+private data class Scaled(
+    val id: Long,
+    val area: Float,
+)
 
-private data class Rect(val x: Float, val y: Float, val width: Float, val height: Float) {
+private data class Rect(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+) {
     fun shorterSide(): Float = minOf(width, height)
 }
 
@@ -89,7 +112,10 @@ private fun layoutRows(entries: List<Map.Entry<Long, Float>>): List<TreemapTile>
  * strip of length [stripWidth] (the shorter side of the remaining rectangle),
  * with thickness area-sum / [stripWidth] perpendicular to it.
  */
-private fun worstAspectRatio(row: List<Scaled>, stripWidth: Float): Float {
+private fun worstAspectRatio(
+    row: List<Scaled>,
+    stripWidth: Float,
+): Float {
     val areaSum = row.sumOf { it.area.toDouble() }.toFloat()
     if (areaSum <= ORIGIN || stripWidth <= ORIGIN) return Float.MAX_VALUE
     val max = row.maxOf { it.area }
@@ -106,7 +132,11 @@ private fun worstAspectRatio(row: List<Scaled>, stripWidth: Float): Float {
  * Lays [row] out as a strip along the shorter side of [rect], emitting tiles
  * into [out]. Returns the leftover free rectangle.
  */
-private fun layoutRow(row: List<Scaled>, rect: Rect, out: MutableList<TreemapTile>): Rect {
+private fun layoutRow(
+    row: List<Scaled>,
+    rect: Rect,
+    out: MutableList<TreemapTile>,
+): Rect {
     val areaSum = row.sumOf { it.area.toDouble() }.toFloat()
     val stripWidth = rect.shorterSide()
     val stripThickness = areaSum / stripWidth

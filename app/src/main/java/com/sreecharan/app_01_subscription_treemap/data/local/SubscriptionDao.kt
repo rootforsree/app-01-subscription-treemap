@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SubscriptionDao {
-
     @Query("SELECT * FROM subscriptions ORDER BY name")
     fun observeAll(): Flow<List<SubscriptionEntity>>
 

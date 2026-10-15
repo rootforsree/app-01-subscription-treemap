@@ -22,7 +22,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 private class FakeSettingsRepository : SettingsRepository {
-
     private val state = MutableStateFlow(AppSettings(ThemeMode.SYSTEM, hapticsEnabled = true))
 
     override val settings: Flow<AppSettings> = state
@@ -38,7 +37,6 @@ private class FakeSettingsRepository : SettingsRepository {
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeEach
@@ -52,40 +50,43 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `emits default settings`() = runTest(testDispatcher) {
-        val viewModel = SettingsViewModel(FakeSettingsRepository())
+    fun `emits default settings`() =
+        runTest(testDispatcher) {
+            val viewModel = SettingsViewModel(FakeSettingsRepository())
 
-        viewModel.uiState.test {
-            assertEquals(SettingsUiState(), awaitItem())
-            cancelAndIgnoreRemainingEvents()
+            viewModel.uiState.test {
+                assertEquals(SettingsUiState(), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
 
     @Test
-    fun `selecting dark updates theme`() = runTest(testDispatcher) {
-        val viewModel = SettingsViewModel(FakeSettingsRepository())
+    fun `selecting dark updates theme`() =
+        runTest(testDispatcher) {
+            val viewModel = SettingsViewModel(FakeSettingsRepository())
 
-        viewModel.uiState.test {
-            assertEquals(ThemeMode.SYSTEM, awaitItem().themeMode)
+            viewModel.uiState.test {
+                assertEquals(ThemeMode.SYSTEM, awaitItem().themeMode)
 
-            viewModel.onThemeModeSelected(ThemeMode.DARK)
+                viewModel.onThemeModeSelected(ThemeMode.DARK)
 
-            assertEquals(ThemeMode.DARK, awaitItem().themeMode)
-            cancelAndIgnoreRemainingEvents()
+                assertEquals(ThemeMode.DARK, awaitItem().themeMode)
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
 
     @Test
-    fun `toggling haptics updates flag`() = runTest(testDispatcher) {
-        val viewModel = SettingsViewModel(FakeSettingsRepository())
+    fun `toggling haptics updates flag`() =
+        runTest(testDispatcher) {
+            val viewModel = SettingsViewModel(FakeSettingsRepository())
 
-        viewModel.uiState.test {
-            assertTrue(awaitItem().hapticsEnabled)
+            viewModel.uiState.test {
+                assertTrue(awaitItem().hapticsEnabled)
 
-            viewModel.onHapticsToggled(false)
+                viewModel.onHapticsToggled(false)
 
-            assertFalse(awaitItem().hapticsEnabled)
-            cancelAndIgnoreRemainingEvents()
+                assertFalse(awaitItem().hapticsEnabled)
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
 }

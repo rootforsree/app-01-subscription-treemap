@@ -12,7 +12,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class PriceHikeLogicTest {
-
     private val subscriptionId = 7L
     private val oldAmount = 10.0
     private val increasedAmount = 12.0
@@ -20,28 +19,30 @@ class PriceHikeLogicTest {
     private val epsilonIncrease = 10.004
     private val detectedAt = 123L
 
-    private val oldSubscription = Subscription(
-        id = subscriptionId,
-        name = "Netflix",
-        amount = oldAmount,
-        currency = "USD",
-        cycle = BillingCycle.MONTHLY,
-        category = SubscriptionCategory.STREAMING,
-        nextBillingEpochDay = null,
-        notes = "",
-        createdAt = 0L,
-        updatedAt = 0L,
-    )
+    private val oldSubscription =
+        Subscription(
+            id = subscriptionId,
+            name = "Netflix",
+            amount = oldAmount,
+            currency = "USD",
+            cycle = BillingCycle.MONTHLY,
+            category = SubscriptionCategory.STREAMING,
+            nextBillingEpochDay = null,
+            notes = "",
+            createdAt = 0L,
+            updatedAt = 0L,
+        )
 
-    private fun input(amount: Double): SubscriptionInput = SubscriptionInput(
-        id = subscriptionId,
-        name = "Netflix",
-        amount = amount,
-        cycle = BillingCycle.MONTHLY,
-        category = SubscriptionCategory.STREAMING,
-        nextBillingEpochDay = null,
-        notes = "",
-    )
+    private fun input(amount: Double): SubscriptionInput =
+        SubscriptionInput(
+            id = subscriptionId,
+            name = "Netflix",
+            amount = amount,
+            cycle = BillingCycle.MONTHLY,
+            category = SubscriptionCategory.STREAMING,
+            nextBillingEpochDay = null,
+            notes = "",
+        )
 
     @Test
     fun `a price increase returns a hike`() {

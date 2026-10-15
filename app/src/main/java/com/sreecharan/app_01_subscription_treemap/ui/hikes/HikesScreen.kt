@@ -80,36 +80,44 @@ fun HikesScreenContent(
         containerColor = colors.groupedBackground,
     ) { padding ->
         when {
-            state.isLoading -> SkeletonList(
-                contentPadding = PaddingValues(
-                    top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
-                ),
-            )
+            state.isLoading -> {
+                SkeletonList(
+                    contentPadding =
+                        PaddingValues(
+                            top = padding.calculateTopPadding(),
+                            bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
+                        ),
+                )
+            }
 
-            state.hikes.isEmpty() -> EmptyState(
-                title = stringResource(R.string.hikes_empty_title),
-                message = stringResource(R.string.hikes_empty_message),
-                icon = Icons.Outlined.CheckCircle,
-                modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
-            )
+            state.hikes.isEmpty() -> {
+                EmptyState(
+                    title = stringResource(R.string.hikes_empty_title),
+                    message = stringResource(R.string.hikes_empty_message),
+                    icon = Icons.Outlined.CheckCircle,
+                    modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
+                )
+            }
 
-            else -> InsetGroupedList(
-                contentPadding = PaddingValues(
-                    top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
-                ),
-            ) {
-                item(key = "hikes", contentType = "hikes") {
-                    GroupCard {
-                        state.hikes.forEachIndexed { index, hike ->
-                            if (index > 0) {
-                                RowDivider()
+            else -> {
+                InsetGroupedList(
+                    contentPadding =
+                        PaddingValues(
+                            top = padding.calculateTopPadding(),
+                            bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
+                        ),
+                ) {
+                    item(key = "hikes", contentType = "hikes") {
+                        GroupCard {
+                            state.hikes.forEachIndexed { index, hike ->
+                                if (index > 0) {
+                                    RowDivider()
+                                }
+                                HikeRow(
+                                    hike = hike,
+                                    onAcknowledge = onAcknowledge,
+                                )
                             }
-                            HikeRow(
-                                hike = hike,
-                                onAcknowledge = onAcknowledge,
-                            )
                         }
                     }
                 }
@@ -119,15 +127,20 @@ fun HikesScreenContent(
 }
 
 @Composable
-private fun HikeRow(hike: PriceHike, onAcknowledge: (Long) -> Unit, modifier: Modifier = Modifier) {
+private fun HikeRow(
+    hike: PriceHike,
+    onAcknowledge: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalAppColors.current
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = AppDimens.rowHorizontalPadding,
-                vertical = AppDimens.rowVerticalPadding,
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = AppDimens.rowHorizontalPadding,
+                    vertical = AppDimens.rowVerticalPadding,
+                ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
     ) {
@@ -142,16 +155,18 @@ private fun HikeRow(hike: PriceHike, onAcknowledge: (Long) -> Unit, modifier: Mo
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            val amounts = stringResource(
-                R.string.hike_row,
-                formatUsd(hike.oldMonthly),
-                formatUsd(hike.newMonthly),
-                formatPercentOneDecimal(hike.percentIncrease),
-            )
-            val detected = stringResource(
-                R.string.hike_detected,
-                formatEpochMillisShort(hike.detectedAt),
-            )
+            val amounts =
+                stringResource(
+                    R.string.hike_row,
+                    formatUsd(hike.oldMonthly),
+                    formatUsd(hike.newMonthly),
+                    formatPercentOneDecimal(hike.percentIncrease),
+                )
+            val detected =
+                stringResource(
+                    R.string.hike_detected,
+                    formatEpochMillisShort(hike.detectedAt),
+                )
             Text(
                 text = "$amounts · $detected",
                 style = AppTypography.footnote,
@@ -196,9 +211,10 @@ private fun HikesTopBar(
             }
         },
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colors.groupedBackground,
-            scrolledContainerColor = colors.groupedBackground,
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = colors.groupedBackground,
+                scrolledContainerColor = colors.groupedBackground,
+            ),
     )
 }

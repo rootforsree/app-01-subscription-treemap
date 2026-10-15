@@ -27,23 +27,26 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class DetailSheetTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
-    private val subscription = Subscription(
-        id = 7,
-        name = "Netflix",
-        amount = 17.99,
-        cycle = BillingCycle.MONTHLY,
-        category = SubscriptionCategory.STREAMING,
-        nextBillingEpochDay = 20_370L,
-        notes = "Standard plan.",
-        createdAt = 1_760_000_000_000L,
-        updatedAt = 1_760_000_000_000L,
-    )
+    private val subscription =
+        Subscription(
+            id = 7,
+            name = "Netflix",
+            amount = 17.99,
+            cycle = BillingCycle.MONTHLY,
+            category = SubscriptionCategory.STREAMING,
+            nextBillingEpochDay = 20_370L,
+            notes = "Standard plan.",
+            createdAt = 1_760_000_000_000L,
+            updatedAt = 1_760_000_000_000L,
+        )
 
-    private fun render(onEdit: () -> Unit = {}, onDelete: (Long) -> Unit = {}) {
+    private fun render(
+        onEdit: () -> Unit = {},
+        onDelete: (Long) -> Unit = {},
+    ) {
         composeRule.setContent {
             AppTheme(darkTheme = false, hapticsEnabled = false) {
                 SubscriptionDetailContent(

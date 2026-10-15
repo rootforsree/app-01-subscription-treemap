@@ -26,22 +26,29 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class HikesContentTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
-    private fun fixtureHike(id: Long, name: String): PriceHike = PriceHike(
-        id = id,
-        subscriptionId = id,
-        subscriptionName = name,
-        oldAmount = 15.49,
-        newAmount = 17.99,
-        cycle = BillingCycle.MONTHLY,
-        detectedAt = 1_760_000_000_000L,
-        acknowledged = false,
-    )
+    private fun fixtureHike(
+        id: Long,
+        name: String,
+    ): PriceHike =
+        PriceHike(
+            id = id,
+            subscriptionId = id,
+            subscriptionName = name,
+            oldAmount = 15.49,
+            newAmount = 17.99,
+            cycle = BillingCycle.MONTHLY,
+            detectedAt = 1_760_000_000_000L,
+            acknowledged = false,
+        )
 
-    private fun render(state: HikesUiState, onAcknowledge: (Long) -> Unit = {}, onAcknowledgeAll: () -> Unit = {}) {
+    private fun render(
+        state: HikesUiState,
+        onAcknowledge: (Long) -> Unit = {},
+        onAcknowledgeAll: () -> Unit = {},
+    ) {
         composeRule.setContent {
             AppTheme(darkTheme = false, hapticsEnabled = false) {
                 HikesScreenContent(
@@ -59,10 +66,11 @@ class HikesContentTest {
         render(
             HikesUiState(
                 isLoading = false,
-                hikes = persistentListOf(
-                    fixtureHike(1, "Netflix"),
-                    fixtureHike(2, "HBO Max"),
-                ),
+                hikes =
+                    persistentListOf(
+                        fixtureHike(1, "Netflix"),
+                        fixtureHike(2, "HBO Max"),
+                    ),
             ),
             onAcknowledge = { acknowledgedId = it },
         )

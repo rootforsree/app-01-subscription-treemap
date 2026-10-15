@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -67,19 +68,14 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val destination = backStackEntry?.destination
     val hikeCount = hikesState.hikes.size
-    val hikesLabel = if (hikeCount > 0) {
-        stringResource(R.string.tab_hikes_badge, hikeCount)
-    } else {
-        stringResource(R.string.tab_hikes)
-    }
+    val hikesLabel =
+        if (hikeCount > 0) {
+            stringResource(R.string.tab_hikes_badge, hikeCount)
+        } else {
+            stringResource(R.string.tab_hikes)
+        }
     val tabs = rememberTabs(hikesLabel = hikesLabel)
-    val selectedIndex = when {
-        destination?.hasRoute(HomeRoute::class) == true -> 0
-        destination?.hasRoute(HikesRoute::class) == true -> 1
-        destination?.hasRoute(SettingsRoute::class) == true -> 2
-        destination?.hasRoute(AboutRoute::class) == true -> 3
-        else -> 0
-    }
+    val selectedIndex = tabIndexFor(destination)
     Box(modifier = modifier.fillMaxSize()) {
         NavHost(
             navController = navController,
@@ -99,22 +95,17 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             tabs = tabs,
             selectedIndex = selectedIndex,
             onTabSelected = { index ->
-                val route: Any = when (index) {
-                    0 -> HomeRoute
-                    1 -> HikesRoute
-                    2 -> SettingsRoute
-                    else -> AboutRoute
-                }
-                navController.navigateTab(route)
+                navController.navigateTab(routeForTab(index))
             },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(
-                    start = AppDimens.screenMargin,
-                    end = AppDimens.screenMargin,
-                    bottom = AppDimens.screenMargin,
-                ),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(
+                        start = AppDimens.screenMargin,
+                        end = AppDimens.screenMargin,
+                        bottom = AppDimens.screenMargin,
+                    ),
         )
     }
 }
@@ -130,25 +121,43 @@ private fun NavController.navigateTab(route: Any) {
 }
 
 @Composable
-private fun rememberTabs(hikesLabel: String) = persistentListOf(
-    TabItem(
-        label = stringResource(R.string.tab_subscriptions),
-        selectedIcon = Icons.Filled.Dashboard,
-        unselectedIcon = Icons.Outlined.Dashboard,
-    ),
-    TabItem(
-        label = hikesLabel,
-        selectedIcon = Icons.AutoMirrored.Filled.TrendingUp,
-        unselectedIcon = Icons.AutoMirrored.Outlined.TrendingUp,
-    ),
-    TabItem(
-        label = stringResource(R.string.tab_settings),
-        selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings,
-    ),
-    TabItem(
-        label = stringResource(R.string.tab_about),
-        selectedIcon = Icons.Filled.Info,
-        unselectedIcon = Icons.Outlined.Info,
-    ),
-)
+private fun rememberTabs(hikesLabel: String) =
+    persistentListOf(
+        TabItem(
+            label = stringResource(R.string.tab_subscriptions),
+            selectedIcon = Icons.Filled.Dashboard,
+            unselectedIcon = Icons.Outlined.Dashboard,
+        ),
+        TabItem(
+            label = hikesLabel,
+            selectedIcon = Icons.AutoMirrored.Filled.TrendingUp,
+            unselectedIcon = Icons.AutoMirrored.Outlined.TrendingUp,
+        ),
+        TabItem(
+            label = stringResource(R.string.tab_settings),
+            selectedIcon = Icons.Filled.Settings,
+            unselectedIcon = Icons.Outlined.Settings,
+        ),
+        TabItem(
+            label = stringResource(R.string.tab_about),
+            selectedIcon = Icons.Filled.Info,
+            unselectedIcon = Icons.Outlined.Info,
+        ),
+    )
+
+private fun tabIndexFor(destination: NavDestination?): Int =
+    when {
+        destination?.hasRoute(HomeRoute::class) == true -> 0
+        destination?.hasRoute(HikesRoute::class) == true -> 1
+        destination?.hasRoute(SettingsRoute::class) == true -> 2
+        destination?.hasRoute(AboutRoute::class) == true -> 3
+        else -> 0
+    }
+
+private fun routeForTab(index: Int): Any =
+    when (index) {
+        0 -> HomeRoute
+        1 -> HikesRoute
+        2 -> SettingsRoute
+        else -> AboutRoute
+    }

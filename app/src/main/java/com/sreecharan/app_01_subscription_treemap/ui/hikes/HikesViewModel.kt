@@ -20,34 +20,36 @@ import javax.inject.Inject
  * the tab badge counts whatever remains here.
  */
 @HiltViewModel
-class HikesViewModel @Inject constructor(
-    private val subscriptionsRepository: SubscriptionsRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : ViewModel() {
+class HikesViewModel
+    @Inject
+    constructor(
+        private val subscriptionsRepository: SubscriptionsRepository,
+        @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    ) : ViewModel() {
+        val uiState: StateFlow<HikesUiState> =
+            subscriptionsRepository
+                .observeAllHikes()
+                .map { hikes ->
+                    HikesUiState(
+                        isLoading = false,
+                        hikes = hikes.filter { !it.acknowledged }.toImmutableList(),
+                    )
+                }.flowOn(ioDispatcher)
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = HikesUiState(isLoading = true),
+                )
 
-    val uiState: StateFlow<HikesUiState> = subscriptionsRepository.observeAllHikes()
-        .map { hikes ->
-            HikesUiState(
-                isLoading = false,
-                hikes = hikes.filter { !it.acknowledged }.toImmutableList(),
-            )
+        fun onAcknowledge(id: Long) {
+            viewModelScope.launch {
+                subscriptionsRepository.acknowledgeHike(id)
+            }
         }
-        .flowOn(ioDispatcher)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = HikesUiState(isLoading = true),
-        )
 
-    fun onAcknowledge(id: Long) {
-        viewModelScope.launch {
-            subscriptionsRepository.acknowledgeHike(id)
+        fun onAcknowledgeAll() {
+            viewModelScope.launch {
+                subscriptionsRepository.acknowledgeAllHikes()
+            }
         }
     }
-
-    fun onAcknowledgeAll() {
-        viewModelScope.launch {
-            subscriptionsRepository.acknowledgeAllHikes()
-        }
-    }
-}

@@ -66,10 +66,11 @@ fun AboutScreenContent(
         containerColor = colors.groupedBackground,
     ) { padding ->
         InsetGroupedList(
-            contentPadding = PaddingValues(
-                top = padding.calculateTopPadding(),
-                bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
-            ),
+            contentPadding =
+                PaddingValues(
+                    top = padding.calculateTopPadding(),
+                    bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
+                ),
         ) {
             aboutIdentitySection(appVersion = appVersion, colors = colors)
             aboutLinksSection(
@@ -81,7 +82,10 @@ fun AboutScreenContent(
     }
 }
 
-private fun LazyListScope.aboutIdentitySection(appVersion: String, colors: AppColors) {
+private fun LazyListScope.aboutIdentitySection(
+    appVersion: String,
+    colors: AppColors,
+) {
     item(key = "identity", contentType = "identity") {
         GroupCard {
             Column(
@@ -94,10 +98,11 @@ private fun LazyListScope.aboutIdentitySection(appVersion: String, colors: AppCo
                     color = colors.label,
                 )
                 Text(
-                    text = stringResource(
-                        R.string.about_version,
-                        appVersion,
-                    ),
+                    text =
+                        stringResource(
+                            R.string.about_version,
+                            appVersion,
+                        ),
                     style = AppTypography.caption,
                     color = colors.secondaryLabel,
                 )
@@ -106,7 +111,11 @@ private fun LazyListScope.aboutIdentitySection(appVersion: String, colors: AppCo
     }
 }
 
-private fun LazyListScope.aboutLinksSection(onOpenGitHub: () -> Unit, onShareApp: () -> Unit, onRateApp: () -> Unit) {
+private fun LazyListScope.aboutLinksSection(
+    onOpenGitHub: () -> Unit,
+    onShareApp: () -> Unit,
+    onRateApp: () -> Unit,
+) {
     item(key = "links", contentType = "links") {
         GroupCard {
             linkRow(
@@ -134,7 +143,12 @@ private fun LazyListScope.aboutLinksSection(onOpenGitHub: () -> Unit, onShareApp
 }
 
 @Composable
-private fun linkRow(titleRes: Int, subtitleRes: Int, icon: ImageVector, onClick: () -> Unit) {
+private fun linkRow(
+    titleRes: Int,
+    subtitleRes: Int,
+    icon: ImageVector,
+    onClick: () -> Unit,
+) {
     val colors = LocalAppColors.current
     SettingsRow(
         title = stringResource(titleRes),
@@ -159,22 +173,29 @@ private fun linkRow(titleRes: Int, subtitleRes: Int, icon: ImageVector, onClick:
     )
 }
 
-private fun openUrl(context: Context, url: String) {
+private fun openUrl(
+    context: Context,
+    url: String,
+) {
     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }
 
 private fun shareApp(context: Context) {
-    val send = Intent(Intent.ACTION_SEND).apply {
-        type = "text/plain"
-        putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_text))
-    }
+    val send =
+        Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_text))
+        }
     val chooser = Intent.createChooser(send, context.getString(R.string.share_chooser_title))
     context.startActivity(chooser)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AboutTopBar(scrollBehavior: TopAppBarScrollBehavior, colors: AppColors) {
+private fun AboutTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    colors: AppColors,
+) {
     LargeTopAppBar(
         title = {
             Text(
@@ -183,9 +204,10 @@ private fun AboutTopBar(scrollBehavior: TopAppBarScrollBehavior, colors: AppColo
             )
         },
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colors.groupedBackground,
-            scrolledContainerColor = colors.groupedBackground,
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = colors.groupedBackground,
+                scrolledContainerColor = colors.groupedBackground,
+            ),
     )
 }

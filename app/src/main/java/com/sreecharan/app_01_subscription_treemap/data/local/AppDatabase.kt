@@ -9,7 +9,6 @@ import androidx.room.RoomDatabase
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun subscriptionDao(): SubscriptionDao
 
     abstract fun priceHikeDao(): PriceHikeDao

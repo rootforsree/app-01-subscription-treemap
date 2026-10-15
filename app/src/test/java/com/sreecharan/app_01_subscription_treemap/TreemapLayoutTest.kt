@@ -10,7 +10,6 @@ import kotlin.test.assertTrue
 private const val EPSILON = 1e-4f
 
 class TreemapLayoutTest {
-
     private val containerWidth = 4f
     private val containerHeight = 3f
     private val sampleWeights = mapOf(1L to 10f, 2L to 5f, 3L to 3f, 4L to 2f, 5L to 1f)
@@ -84,8 +83,12 @@ class TreemapLayoutTest {
         assertEquals(first, second)
     }
 
-    private fun overlaps(a: TreemapTile, b: TreemapTile): Boolean = a.x < b.x + b.width - EPSILON &&
-        b.x < a.x + a.width - EPSILON &&
-        a.y < b.y + b.height - EPSILON &&
-        b.y < a.y + a.height - EPSILON
+    private fun overlaps(
+        a: TreemapTile,
+        b: TreemapTile,
+    ): Boolean =
+        a.x < b.x + b.width - EPSILON &&
+            b.x < a.x + a.width - EPSILON &&
+            a.y < b.y + b.height - EPSILON &&
+            b.y < a.y + a.height - EPSILON
 }

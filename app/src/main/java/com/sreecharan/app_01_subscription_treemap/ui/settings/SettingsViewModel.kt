@@ -13,30 +13,33 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(private val settingsRepository: SettingsRepository) : ViewModel() {
+class SettingsViewModel
+    @Inject
+    constructor(
+        private val settingsRepository: SettingsRepository,
+    ) : ViewModel() {
+        val uiState: StateFlow<SettingsUiState> =
+            settingsRepository.settings
+                .map { settings ->
+                    SettingsUiState(
+                        themeMode = settings.themeMode,
+                        hapticsEnabled = settings.hapticsEnabled,
+                    )
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = SettingsUiState(),
+                )
 
-    val uiState: StateFlow<SettingsUiState> = settingsRepository.settings
-        .map { settings ->
-            SettingsUiState(
-                themeMode = settings.themeMode,
-                hapticsEnabled = settings.hapticsEnabled,
-            )
+        fun onThemeModeSelected(mode: ThemeMode) {
+            viewModelScope.launch {
+                settingsRepository.setThemeMode(mode)
+            }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = SettingsUiState(),
-        )
 
-    fun onThemeModeSelected(mode: ThemeMode) {
-        viewModelScope.launch {
-            settingsRepository.setThemeMode(mode)
+        fun onHapticsToggled(enabled: Boolean) {
+            viewModelScope.launch {
+                settingsRepository.setHapticsEnabled(enabled)
+            }
         }
     }
-
-    fun onHapticsToggled(enabled: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.setHapticsEnabled(enabled)
-        }
-    }
-}
