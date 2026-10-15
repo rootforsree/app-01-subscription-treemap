@@ -139,4 +139,8 @@ dependencies {
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.robolectric)
     testImplementation(libs.compose.ui.test.junit4)
+    // Declares ComponentActivity for createComposeRule() under Robolectric.
+    // Manifest-only AAR; implementation scope so both debug and release
+    // unit-test variants resolve the host activity.
+    implementation(libs.compose.ui.test.manifest)
 }
