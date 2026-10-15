@@ -56,8 +56,8 @@ class EditorFlowTest {
         var captured: SubscriptionInput? = null
         render(onSave = { captured = it })
 
-        composeRule.onNodeWithTag("editor_name_field").performTextReplacement("HBO Max")
-        composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("15.99")
+        composeRule.onNodeWithTag("editor_name_field", useUnmergedTree = true).performTextReplacement("HBO Max")
+        composeRule.onNodeWithTag("editor_amount_field", useUnmergedTree = true).performTextReplacement("15.99")
         composeRule.onNodeWithText("Yearly").performClick()
         composeRule.onNodeWithText("Streaming").performClick()
         composeRule.onNodeWithText("Save").performClick()
@@ -76,7 +76,7 @@ class EditorFlowTest {
         var captured: SubscriptionInput? = null
         render(onSave = { captured = it })
 
-        composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("9.99")
+        composeRule.onNodeWithTag("editor_amount_field", useUnmergedTree = true).performTextReplacement("9.99")
         composeRule.onNodeWithText("Save").performClick()
 
         composeRule.onNodeWithText("Enter a name").assertIsDisplayed()
@@ -88,8 +88,8 @@ class EditorFlowTest {
         var captured: SubscriptionInput? = null
         render(onSave = { captured = it })
 
-        composeRule.onNodeWithTag("editor_name_field").performTextReplacement("HBO Max")
-        composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("0")
+        composeRule.onNodeWithTag("editor_name_field", useUnmergedTree = true).performTextReplacement("HBO Max")
+        composeRule.onNodeWithTag("editor_amount_field", useUnmergedTree = true).performTextReplacement("0")
         composeRule.onNodeWithText("Save").performClick()
 
         composeRule.onNodeWithText("Enter an amount above $0").assertIsDisplayed()

@@ -168,7 +168,7 @@ fun SubscriptionEditorContent(
                 null
             },
             singleLine = true,
-            // keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             shape = AppShapes.card,
             modifier = Modifier
                 .fillMaxWidth()
