@@ -59,3 +59,10 @@ jobs:
 
       - name: Run checks (tests, Spotless, detekt, Lint)
         run: ./gradlew check --stacktrace
+
+      - name: Upload detekt reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: detekt-reports
+          path: '**/build/reports/detekt/'

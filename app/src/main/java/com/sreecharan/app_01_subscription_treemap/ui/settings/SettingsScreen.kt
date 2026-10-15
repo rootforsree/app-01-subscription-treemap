@@ -113,22 +113,23 @@ fun SettingsScreenContent(
             appearanceSection(
                 state = state,
                 onThemeModeSelected = onThemeModeSelected,
+                colors = colors,
             )
             generalSection(
                 state = state,
                 onHapticsToggled = onHapticsToggled,
                 onOpenNotificationSettings = onOpenNotificationSettings,
+                colors = colors,
             )
         }
     }
 }
 
-@Composable
 private fun LazyListScope.appearanceSection(
     state: SettingsUiState,
     onThemeModeSelected: (ThemeMode) -> Unit,
+    colors: AppColors,
 ) {
-    val colors = LocalAppColors.current
     item(key = "appearance-header", contentType = "header") {
         SectionHeader(title = stringResource(R.string.section_appearance))
     }
@@ -167,13 +168,12 @@ private fun LazyListScope.appearanceSection(
     }
 }
 
-@Composable
 private fun LazyListScope.generalSection(
     state: SettingsUiState,
     onHapticsToggled: (Boolean) -> Unit,
     onOpenNotificationSettings: () -> Unit,
+    colors: AppColors,
 ) {
-    val colors = LocalAppColors.current
     item(key = "general-header", contentType = "header") {
         SectionHeader(title = stringResource(R.string.section_general))
     }
