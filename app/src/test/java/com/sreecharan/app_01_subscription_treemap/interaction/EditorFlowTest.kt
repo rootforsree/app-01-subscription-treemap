@@ -5,7 +5,7 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import com.sreecharan.app_01_subscription_treemap.data.model.BillingCycle
 import com.sreecharan.app_01_subscription_treemap.data.model.SubscriptionCategory
 import com.sreecharan.app_01_subscription_treemap.data.model.SubscriptionInput
@@ -56,8 +56,8 @@ class EditorFlowTest {
         var captured: SubscriptionInput? = null
         render(onSave = { captured = it })
 
-        composeRule.onNodeWithTag("editor_name_field").performTextInput("HBO Max")
-        composeRule.onNodeWithTag("editor_amount_field").performTextInput("15.99")
+        composeRule.onNodeWithTag("editor_name_field").performTextReplacement("HBO Max")
+        composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("15.99")
         composeRule.onNodeWithText("Yearly").performClick()
         composeRule.onNodeWithText("Streaming").performClick()
         composeRule.onNodeWithText("Save").performClick()
@@ -76,7 +76,7 @@ class EditorFlowTest {
         var captured: SubscriptionInput? = null
         render(onSave = { captured = it })
 
-        composeRule.onNodeWithTag("editor_amount_field").performTextInput("9.99")
+        composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("9.99")
         composeRule.onNodeWithText("Save").performClick()
 
         composeRule.onNodeWithText("Enter a name").assertIsDisplayed()
@@ -88,8 +88,8 @@ class EditorFlowTest {
         var captured: SubscriptionInput? = null
         render(onSave = { captured = it })
 
-        composeRule.onNodeWithTag("editor_name_field").performTextInput("HBO Max")
-        composeRule.onNodeWithTag("editor_amount_field").performTextInput("0")
+        composeRule.onNodeWithTag("editor_name_field").performTextReplacement("HBO Max")
+        composeRule.onNodeWithTag("editor_amount_field").performTextReplacement("0")
         composeRule.onNodeWithText("Save").performClick()
 
         composeRule.onNodeWithText("Enter an amount above $0").assertIsDisplayed()
