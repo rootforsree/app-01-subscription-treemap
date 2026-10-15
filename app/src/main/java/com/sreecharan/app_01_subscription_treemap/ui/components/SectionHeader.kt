@@ -15,10 +15,7 @@ import java.util.Locale
  * the card content below it (16dp list inset + 16dp row padding).
  */
 @Composable
-fun SectionHeader(
-    title: String,
-    modifier: Modifier = Modifier,
-) {
+fun SectionHeader(title: String, modifier: Modifier = Modifier) {
     Text(
         text = title.uppercase(Locale.getDefault()),
         style = AppTypography.footnote.copy(letterSpacing = 0.5.sp),

@@ -38,19 +38,17 @@ import com.sreecharan.app_01_subscription_treemap.ui.components.SkeletonList
 import com.sreecharan.app_01_subscription_treemap.ui.format.formatEpochMillisShort
 import com.sreecharan.app_01_subscription_treemap.ui.format.formatPercentOneDecimal
 import com.sreecharan.app_01_subscription_treemap.ui.format.formatUsd
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
-import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 
 /**
  * Thin stateful route: owns the ViewModel and forwards events. The content
  * below stays stateless and never sees the ViewModel.
  */
 @Composable
-fun HikesRoute(
-    viewModel: HikesViewModel = hiltViewModel(),
-) {
+fun HikesRoute(viewModel: HikesViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     HikesScreenContent(
         state = state,
@@ -88,12 +86,14 @@ fun HikesScreenContent(
                     bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
                 ),
             )
+
             state.hikes.isEmpty() -> EmptyState(
                 title = stringResource(R.string.hikes_empty_title),
                 message = stringResource(R.string.hikes_empty_message),
                 icon = Icons.Outlined.CheckCircle,
                 modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
             )
+
             else -> InsetGroupedList(
                 contentPadding = PaddingValues(
                     top = padding.calculateTopPadding(),
@@ -119,11 +119,7 @@ fun HikesScreenContent(
 }
 
 @Composable
-private fun HikeRow(
-    hike: PriceHike,
-    onAcknowledge: (Long) -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun HikeRow(hike: PriceHike, onAcknowledge: (Long) -> Unit, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Row(
         modifier = modifier
@@ -200,7 +196,7 @@ private fun HikesTopBar(
             }
         },
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.largeTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = colors.groupedBackground,
             scrolledContainerColor = colors.groupedBackground,
         ),

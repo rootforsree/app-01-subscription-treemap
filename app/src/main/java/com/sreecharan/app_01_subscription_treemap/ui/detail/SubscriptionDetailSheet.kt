@@ -231,11 +231,7 @@ fun SubscriptionDetailContent(
 }
 
 @Composable
-private fun DetailRow(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier,
-) {
+private fun DetailRow(label: String, value: String, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Row(
         modifier = modifier
@@ -262,10 +258,7 @@ private fun DetailRow(
 }
 
 @Composable
-private fun HikeWarningRow(
-    hike: PriceHike,
-    modifier: Modifier = Modifier,
-) {
+private fun HikeWarningRow(hike: PriceHike, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Row(
         modifier = modifier

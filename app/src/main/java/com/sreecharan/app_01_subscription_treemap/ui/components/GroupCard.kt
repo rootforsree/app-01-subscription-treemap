@@ -18,10 +18,7 @@ import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
  * visual radius steps down naturally inside the 12dp outer radius.
  */
 @Composable
-fun GroupCard(
-    modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit,
-) {
+fun GroupCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = AppShapes.card,

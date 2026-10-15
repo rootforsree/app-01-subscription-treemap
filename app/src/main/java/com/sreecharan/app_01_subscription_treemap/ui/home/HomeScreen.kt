@@ -22,9 +22,9 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -51,8 +51,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sreecharan.app_01_subscription_treemap.R
@@ -67,12 +67,12 @@ import com.sreecharan.app_01_subscription_treemap.ui.components.SkeletonList
 import com.sreecharan.app_01_subscription_treemap.ui.detail.SubscriptionDetailSheet
 import com.sreecharan.app_01_subscription_treemap.ui.editor.SubscriptionEditorSheet
 import com.sreecharan.app_01_subscription_treemap.ui.format.formatUsd
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppShapes
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.CategoryColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
-import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.rememberHapticTick
 import kotlinx.collections.immutable.ImmutableList
 
@@ -85,10 +85,7 @@ private val TileMinTextHeight = 44.dp
  * snackbar, and forwards events. The content below stays stateless.
  */
 @Composable
-fun HomeRoute(
-    onNavigateToHikes: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel(),
-) {
+fun HomeRoute(onNavigateToHikes: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(viewModel) {
@@ -194,11 +191,13 @@ private fun HomeScaffoldContent(
                 bottom = padding.calculateBottomPadding() + AppDimens.tabBarClearance,
             ),
         )
+
         state.errorMessage != null -> ErrorState(
             message = state.errorMessage,
             onRetry = onRetry,
             modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
         )
+
         state.subscriptions.isEmpty() && state.selectedCategory == null -> EmptyState(
             title = stringResource(R.string.empty_title),
             message = stringResource(R.string.empty_message),
@@ -207,6 +206,7 @@ private fun HomeScaffoldContent(
             icon = Icons.Outlined.Dashboard,
             modifier = Modifier.padding(bottom = AppDimens.tabBarClearance),
         )
+
         else -> HomeContentBody(
             state = state,
             onCategorySelected = onCategorySelected,
@@ -219,11 +219,7 @@ private fun HomeScaffoldContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeTopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
-    colors: AppColors,
-    onAddClick: () -> Unit,
-) {
+private fun HomeTopBar(scrollBehavior: TopAppBarScrollBehavior, colors: AppColors, onAddClick: () -> Unit) {
     LargeTopAppBar(
         title = {
             Text(
@@ -241,7 +237,7 @@ private fun HomeTopBar(
             }
         },
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.largeTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = colors.groupedBackground,
             scrolledContainerColor = colors.groupedBackground,
         ),
@@ -303,11 +299,7 @@ private fun HomeContentBody(
 }
 
 @Composable
-private fun SummaryHeader(
-    totalMonthly: Double,
-    totalYearly: Double,
-    modifier: Modifier = Modifier,
-) {
+private fun SummaryHeader(totalMonthly: Double, totalYearly: Double, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Column(
         modifier = modifier,
@@ -332,11 +324,7 @@ private fun SummaryHeader(
 }
 
 @Composable
-private fun HikeBanner(
-    count: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun HikeBanner(count: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Row(
         modifier = modifier
@@ -350,7 +338,7 @@ private fun HikeBanner(
         horizontalArrangement = Arrangement.spacedBy(AppDimens.spacing12),
     ) {
         Icon(
-            imageVector = Icons.Filled.TrendingUp,
+            imageVector = Icons.AutoMirrored.Filled.TrendingUp,
             contentDescription = null,
             tint = colors.warning,
             modifier = Modifier.size(AppDimens.iconSize),

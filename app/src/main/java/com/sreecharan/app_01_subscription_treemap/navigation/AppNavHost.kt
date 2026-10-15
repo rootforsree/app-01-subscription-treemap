@@ -7,14 +7,14 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.TrendingUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -138,8 +138,8 @@ private fun rememberTabs(hikesLabel: String) = persistentListOf(
     ),
     TabItem(
         label = hikesLabel,
-        selectedIcon = Icons.Filled.TrendingUp,
-        unselectedIcon = Icons.Outlined.TrendingUp,
+        selectedIcon = Icons.AutoMirrored.Filled.TrendingUp,
+        unselectedIcon = Icons.AutoMirrored.Outlined.TrendingUp,
     ),
     TabItem(
         label = stringResource(R.string.tab_settings),

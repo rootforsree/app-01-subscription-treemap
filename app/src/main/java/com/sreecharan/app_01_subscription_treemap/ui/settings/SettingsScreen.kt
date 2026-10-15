@@ -2,7 +2,6 @@ package com.sreecharan.app_01_subscription_treemap.ui.settings
 
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings as SystemSettings
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
@@ -40,16 +39,15 @@ import com.sreecharan.app_01_subscription_treemap.ui.components.InsetGroupedList
 import com.sreecharan.app_01_subscription_treemap.ui.components.RowDivider
 import com.sreecharan.app_01_subscription_treemap.ui.components.SectionHeader
 import com.sreecharan.app_01_subscription_treemap.ui.components.SettingsRow
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
-import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import kotlinx.collections.immutable.persistentListOf
+import android.provider.Settings as SystemSettings
 
 @Composable
-fun SettingsRoute(
-    viewModel: SettingsViewModel = hiltViewModel(),
-) {
+fun SettingsRoute(viewModel: SettingsViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     SettingsScreenContent(
@@ -234,10 +232,7 @@ private fun openNotificationSettings(context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsTopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
-    colors: AppColors,
-) {
+private fun SettingsTopBar(scrollBehavior: TopAppBarScrollBehavior, colors: AppColors) {
     LargeTopAppBar(
         title = {
             Text(
@@ -246,7 +241,7 @@ private fun SettingsTopBar(
             )
         },
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.largeTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = colors.groupedBackground,
             scrolledContainerColor = colors.groupedBackground,
         ),

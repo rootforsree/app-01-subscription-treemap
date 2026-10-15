@@ -11,10 +11,7 @@ import javax.inject.Inject
 /**
  * Domain-level app settings. The single source of truth for theme and haptics.
  */
-data class AppSettings(
-    val themeMode: ThemeMode,
-    val hapticsEnabled: Boolean,
-)
+data class AppSettings(val themeMode: ThemeMode, val hapticsEnabled: Boolean)
 
 interface SettingsRepository {
 
@@ -25,9 +22,8 @@ interface SettingsRepository {
     suspend fun setHapticsEnabled(enabled: Boolean)
 }
 
-class SettingsRepositoryImpl @Inject constructor(
-    private val dataStore: DataStore<SettingsProto>,
-) : SettingsRepository {
+class SettingsRepositoryImpl @Inject constructor(private val dataStore: DataStore<SettingsProto>) :
+    SettingsRepository {
 
     override val settings: Flow<AppSettings> = dataStore.data
         .catch { e ->

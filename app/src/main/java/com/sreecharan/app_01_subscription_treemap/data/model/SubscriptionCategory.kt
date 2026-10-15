@@ -11,5 +11,4 @@ enum class SubscriptionCategory(val displayName: String) {
     CLOUD("Cloud"),
     UTILITIES("Utilities"),
     OTHER("Other"),
-    ;
 }

@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
-import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.rememberHapticTick
 
 /**
@@ -131,6 +131,7 @@ private fun interactionModifier(
             onClick?.invoke()
         },
     )
+
     selectableSelected != null -> Modifier.selectable(
         selected = selectableSelected,
         role = Role.RadioButton,
@@ -139,6 +140,7 @@ private fun interactionModifier(
             onClick?.invoke()
         },
     )
+
     onClick != null -> Modifier.clickable(
         role = Role.Button,
         onClick = {
@@ -146,5 +148,6 @@ private fun interactionModifier(
             onClick()
         },
     )
+
     else -> Modifier
 }

@@ -16,9 +16,9 @@ import com.sreecharan.app_01_subscription_treemap.data.treemap.squarifiedTreemap
 import com.sreecharan.app_01_subscription_treemap.di.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,11 +31,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-private data class DetailData(
-    val subscription: Subscription?,
-    val latestHike: PriceHike?,
-)
+private data class DetailData(val subscription: Subscription?, val latestHike: PriceHike?)
 
 /**
  * Home screen state owner. Combines the subscription list, the unacknowledged
@@ -61,6 +59,7 @@ class HomeViewModel @Inject constructor(
     /** One-shot UI events (snackbars). Collected once in the route. */
     val events: Flow<String> = eventsChannel.receiveAsFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val detailFlow: Flow<DetailData> = detailSubscriptionIdFlow.flatMapLatest { id ->
         if (id == null) {
             flowOf(DetailData(subscription = null, latestHike = null))
@@ -201,6 +200,7 @@ class HomeViewModel @Inject constructor(
                     onEditorDismiss()
                     eventsChannel.send(appContext.getString(R.string.snack_hike_recorded))
                 }
+
                 SaveResult.Saved -> onEditorDismiss()
             }
         }

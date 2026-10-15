@@ -9,7 +9,4 @@ import kotlinx.collections.immutable.persistentListOf
  * The price-hike inbox: only hikes the user has not acknowledged yet.
  */
 @Immutable
-data class HikesUiState(
-    val isLoading: Boolean = true,
-    val hikes: ImmutableList<PriceHike> = persistentListOf(),
-)
+data class HikesUiState(val isLoading: Boolean = true, val hikes: ImmutableList<PriceHike> = persistentListOf())

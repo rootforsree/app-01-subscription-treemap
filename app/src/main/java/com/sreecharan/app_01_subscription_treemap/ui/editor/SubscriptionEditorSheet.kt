@@ -310,10 +310,7 @@ fun SubscriptionEditorContent(
 }
 
 @Composable
-private fun FieldLabel(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
+private fun FieldLabel(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         style = AppTypography.footnote,
@@ -323,11 +320,7 @@ private fun FieldLabel(
 }
 
 @Composable
-private fun CycleSelector(
-    selected: BillingCycle,
-    onSelect: (BillingCycle) -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun CycleSelector(selected: BillingCycle, onSelect: (BillingCycle) -> Unit, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -416,11 +409,7 @@ private fun CategorySelector(
 }
 
 @Composable
-private fun NextBillingRow(
-    epochDay: Long?,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun NextBillingRow(epochDay: Long?, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Column(
         modifier = modifier.fillMaxWidth(),

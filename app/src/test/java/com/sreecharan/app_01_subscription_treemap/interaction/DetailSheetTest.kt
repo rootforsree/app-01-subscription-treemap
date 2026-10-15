@@ -43,10 +43,7 @@ class DetailSheetTest {
         updatedAt = 1_760_000_000_000L,
     )
 
-    private fun render(
-        onEdit: () -> Unit = {},
-        onDelete: (Long) -> Unit = {},
-    ) {
+    private fun render(onEdit: () -> Unit = {}, onDelete: (Long) -> Unit = {}) {
         composeRule.setContent {
             AppTheme(darkTheme = false, hapticsEnabled = false) {
                 SubscriptionDetailContent(

@@ -56,10 +56,7 @@ class SubscriptionsRepositoryTest {
         database.close()
     }
 
-    private fun input(
-        name: String = "Netflix",
-        amount: Double = baseAmount,
-    ): SubscriptionInput = SubscriptionInput(
+    private fun input(name: String = "Netflix", amount: Double = baseAmount): SubscriptionInput = SubscriptionInput(
         name = name,
         amount = amount,
         cycle = BillingCycle.MONTHLY,

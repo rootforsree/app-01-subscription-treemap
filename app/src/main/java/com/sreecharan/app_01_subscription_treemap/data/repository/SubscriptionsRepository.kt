@@ -64,11 +64,7 @@ interface SubscriptionsRepository {
  * when there is nothing to compare against (a new subscription) or when the
  * monthly amount did not rise beyond [HIKE_EPSILON].
  */
-internal fun detectHike(
-    old: Subscription?,
-    input: SubscriptionInput,
-    detectedAt: Long,
-): PriceHike? {
+internal fun detectHike(old: Subscription?, input: SubscriptionInput, detectedAt: Long): PriceHike? {
     if (old == null) return null
     val oldMonthly = old.cycle.monthlyAmount(old.amount)
     val newMonthly = input.cycle.monthlyAmount(input.amount)
@@ -95,37 +91,32 @@ class SubscriptionsRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : SubscriptionsRepository {
 
-    override fun observeSubscriptions(): Flow<List<Subscription>> =
-        subscriptionDao.observeAll()
-            .map { entities -> entities.map(SubscriptionEntity::toDomain) }
-            .flowOn(ioDispatcher)
+    override fun observeSubscriptions(): Flow<List<Subscription>> = subscriptionDao.observeAll()
+        .map { entities -> entities.map(SubscriptionEntity::toDomain) }
+        .flowOn(ioDispatcher)
 
-    override fun observeSubscription(id: Long): Flow<Subscription?> =
-        subscriptionDao.observeById(id)
-            .map { entity -> entity?.toDomain() }
-            .flowOn(ioDispatcher)
+    override fun observeSubscription(id: Long): Flow<Subscription?> = subscriptionDao.observeById(id)
+        .map { entity -> entity?.toDomain() }
+        .flowOn(ioDispatcher)
 
-    override fun observeUnacknowledgedHikes(): Flow<List<PriceHike>> =
-        priceHikeDao.observeUnacknowledged()
-            .map { entities -> entities.map(PriceHikeEntity::toDomain) }
-            .flowOn(ioDispatcher)
+    override fun observeUnacknowledgedHikes(): Flow<List<PriceHike>> = priceHikeDao.observeUnacknowledged()
+        .map { entities -> entities.map(PriceHikeEntity::toDomain) }
+        .flowOn(ioDispatcher)
 
-    override fun observeAllHikes(): Flow<List<PriceHike>> =
-        priceHikeDao.observeAll()
-            .map { entities -> entities.map(PriceHikeEntity::toDomain) }
-            .flowOn(ioDispatcher)
+    override fun observeAllHikes(): Flow<List<PriceHike>> = priceHikeDao.observeAll()
+        .map { entities -> entities.map(PriceHikeEntity::toDomain) }
+        .flowOn(ioDispatcher)
 
-    override suspend fun saveSubscription(input: SubscriptionInput): SaveResult =
-        withContext(ioDispatcher) {
-            val now = System.currentTimeMillis()
-            val id = input.id
-            if (id == null) {
-                insertNewSubscription(input, now)
-                SaveResult.Saved
-            } else {
-                updateExistingSubscription(input, id, now)
-            }
+    override suspend fun saveSubscription(input: SubscriptionInput): SaveResult = withContext(ioDispatcher) {
+        val now = System.currentTimeMillis()
+        val id = input.id
+        if (id == null) {
+            insertNewSubscription(input, now)
+            SaveResult.Saved
+        } else {
+            updateExistingSubscription(input, id, now)
         }
+    }
 
     private suspend fun insertNewSubscription(input: SubscriptionInput, now: Long) {
         subscriptionDao.insert(
@@ -143,11 +134,7 @@ class SubscriptionsRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun updateExistingSubscription(
-        input: SubscriptionInput,
-        id: Long,
-        now: Long,
-    ): SaveResult {
+    private suspend fun updateExistingSubscription(input: SubscriptionInput, id: Long, now: Long): SaveResult {
         val old = subscriptionDao.observeById(id).first()?.toDomain()
         subscriptionDao.update(
             SubscriptionEntity(
@@ -215,23 +202,18 @@ class SubscriptionsRepositoryImpl @Inject constructor(
 
     private fun seedEntities(today: LocalDate): List<SubscriptionEntity> {
         val now = System.currentTimeMillis()
-        fun entity(
-            name: String,
-            amount: Double,
-            category: SubscriptionCategory,
-            plusDays: Int,
-            notes: String,
-        ) = SubscriptionEntity(
-            name = name,
-            amount = amount,
-            currency = "USD",
-            cycle = BillingCycle.MONTHLY.name,
-            category = category.name,
-            nextBillingEpochDay = today.plusDays(plusDays.toLong()).toEpochDay(),
-            notes = notes,
-            createdAt = now,
-            updatedAt = now,
-        )
+        fun entity(name: String, amount: Double, category: SubscriptionCategory, plusDays: Int, notes: String) =
+            SubscriptionEntity(
+                name = name,
+                amount = amount,
+                currency = "USD",
+                cycle = BillingCycle.MONTHLY.name,
+                category = category.name,
+                nextBillingEpochDay = today.plusDays(plusDays.toLong()).toEpochDay(),
+                notes = notes,
+                createdAt = now,
+                updatedAt = now,
+            )
         return listOf(
             entity(
                 name = "Netflix",

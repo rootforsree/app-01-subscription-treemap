@@ -75,11 +75,7 @@ class HikesScreenshotTest {
         )
     }
 
-    private fun capture(
-        darkTheme: Boolean,
-        state: HikesUiState,
-        name: String,
-    ) {
+    private fun capture(darkTheme: Boolean, state: HikesUiState, name: String) {
         composeRule.setContent {
             AppTheme(darkTheme = darkTheme, hapticsEnabled = false) {
                 HikesScreenContent(

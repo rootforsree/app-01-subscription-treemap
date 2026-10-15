@@ -129,11 +129,7 @@ class TreemapScreenshotTest {
         )
     }
 
-    private fun capture(
-        darkTheme: Boolean,
-        state: HomeUiState,
-        name: String,
-    ) {
+    private fun capture(darkTheme: Boolean, state: HomeUiState, name: String) {
         composeRule.setContent {
             AppTheme(darkTheme = darkTheme, hapticsEnabled = false) {
                 val snackbarHostState = remember { SnackbarHostState() }

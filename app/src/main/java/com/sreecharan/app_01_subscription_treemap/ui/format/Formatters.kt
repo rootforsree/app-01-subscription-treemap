@@ -11,7 +11,7 @@ private val UsdFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.US
 private val FullDateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US)
 private val ShortDateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d", Locale.US)
 
-/**
+/*
  * Money and date formatting for the whole UI layer. USD everywhere in this
  * app; dates render in US short form. Called on the main thread only, so the
  * shared NumberFormat instance is safe.

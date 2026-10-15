@@ -37,11 +37,7 @@ private const val SHIMMER_MAX_ALPHA = 1f
 private const val SHIMMER_DURATION_MS = 1200
 
 @Composable
-fun SkeletonList(
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    rows: Int = 6,
-) {
+fun SkeletonList(modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp), rows: Int = 6) {
     val shimmerAlpha = if (!animationsEnabled(LocalContext.current)) {
         SHIMMER_STATIC_ALPHA
     } else {
@@ -93,11 +89,7 @@ fun SkeletonList(
 }
 
 @Composable
-private fun SkeletonBar(
-    widthFraction: Float,
-    height: Dp,
-    alpha: Float,
-) {
+private fun SkeletonBar(widthFraction: Float, height: Dp, alpha: Float) {
     Box(
         modifier = Modifier
             .fillMaxWidth(widthFraction)

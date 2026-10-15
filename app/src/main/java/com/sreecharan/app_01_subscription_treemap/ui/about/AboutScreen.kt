@@ -33,10 +33,10 @@ import com.sreecharan.app_01_subscription_treemap.ui.components.GroupCard
 import com.sreecharan.app_01_subscription_treemap.ui.components.InsetGroupedList
 import com.sreecharan.app_01_subscription_treemap.ui.components.RowDivider
 import com.sreecharan.app_01_subscription_treemap.ui.components.SettingsRow
+import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppDimens
 import com.sreecharan.app_01_subscription_treemap.ui.theme.AppTypography
 import com.sreecharan.app_01_subscription_treemap.ui.theme.LocalAppColors
-import com.sreecharan.app_01_subscription_treemap.ui.theme.AppColors
 
 @Composable
 fun AboutRoute() {
@@ -81,10 +81,7 @@ fun AboutScreenContent(
     }
 }
 
-private fun LazyListScope.aboutIdentitySection(
-    appVersion: String,
-    colors: AppColors,
-) {
+private fun LazyListScope.aboutIdentitySection(appVersion: String, colors: AppColors) {
     item(key = "identity", contentType = "identity") {
         GroupCard {
             Column(
@@ -109,11 +106,7 @@ private fun LazyListScope.aboutIdentitySection(
     }
 }
 
-private fun LazyListScope.aboutLinksSection(
-    onOpenGitHub: () -> Unit,
-    onShareApp: () -> Unit,
-    onRateApp: () -> Unit,
-) {
+private fun LazyListScope.aboutLinksSection(onOpenGitHub: () -> Unit, onShareApp: () -> Unit, onRateApp: () -> Unit) {
     item(key = "links", contentType = "links") {
         GroupCard {
             linkRow(
@@ -141,12 +134,7 @@ private fun LazyListScope.aboutLinksSection(
 }
 
 @Composable
-private fun linkRow(
-    titleRes: Int,
-    subtitleRes: Int,
-    icon: ImageVector,
-    onClick: () -> Unit,
-) {
+private fun linkRow(titleRes: Int, subtitleRes: Int, icon: ImageVector, onClick: () -> Unit) {
     val colors = LocalAppColors.current
     SettingsRow(
         title = stringResource(titleRes),
@@ -186,10 +174,7 @@ private fun shareApp(context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AboutTopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
-    colors: AppColors,
-) {
+private fun AboutTopBar(scrollBehavior: TopAppBarScrollBehavior, colors: AppColors) {
     LargeTopAppBar(
         title = {
             Text(
@@ -198,7 +183,7 @@ private fun AboutTopBar(
             )
         },
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.largeTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = colors.groupedBackground,
             scrolledContainerColor = colors.groupedBackground,
         ),

@@ -30,10 +30,7 @@ class HikesContentTest {
     @get:Rule
     val composeRule = createComposeRule()
 
-    private fun fixtureHike(
-        id: Long,
-        name: String,
-    ): PriceHike = PriceHike(
+    private fun fixtureHike(id: Long, name: String): PriceHike = PriceHike(
         id = id,
         subscriptionId = id,
         subscriptionName = name,
@@ -44,11 +41,7 @@ class HikesContentTest {
         acknowledged = false,
     )
 
-    private fun render(
-        state: HikesUiState,
-        onAcknowledge: (Long) -> Unit = {},
-        onAcknowledgeAll: () -> Unit = {},
-    ) {
+    private fun render(state: HikesUiState, onAcknowledge: (Long) -> Unit = {}, onAcknowledgeAll: () -> Unit = {}) {
         composeRule.setContent {
             AppTheme(darkTheme = false, hapticsEnabled = false) {
                 HikesScreenContent(

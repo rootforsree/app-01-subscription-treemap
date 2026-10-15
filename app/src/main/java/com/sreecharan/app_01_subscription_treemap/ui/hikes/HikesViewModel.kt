@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.sreecharan.app_01_subscription_treemap.data.repository.SubscriptionsRepository
 import com.sreecharan.app_01_subscription_treemap.di.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Owns the price-hike inbox. Acknowledging a hike removes it from the list;
@@ -25,7 +25,7 @@ class HikesViewModel @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    val uiState: StateFlow<HikesUiState> field = subscriptionsRepository.observeAllHikes()
+    val uiState: StateFlow<HikesUiState> = subscriptionsRepository.observeAllHikes()
         .map { hikes ->
             HikesUiState(
                 isLoading = false,

@@ -13,11 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository,
-) : ViewModel() {
+class SettingsViewModel @Inject constructor(private val settingsRepository: SettingsRepository) : ViewModel() {
 
-    val uiState: StateFlow<SettingsUiState> field = settingsRepository.settings
+    val uiState: StateFlow<SettingsUiState> = settingsRepository.settings
         .map { settings ->
             SettingsUiState(
                 themeMode = settings.themeMode,

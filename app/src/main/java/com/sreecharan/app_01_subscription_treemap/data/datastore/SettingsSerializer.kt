@@ -17,12 +17,11 @@ object SettingsSerializer : Serializer<SettingsProto> {
         .setHapticsEnabled(true)
         .build()
 
-    override suspend fun readFrom(input: InputStream): SettingsProto =
-        try {
-            SettingsProto.parseFrom(input)
-        } catch (e: InvalidProtocolBufferException) {
-            throw CorruptionException("Cannot read settings proto.", e)
-        }
+    override suspend fun readFrom(input: InputStream): SettingsProto = try {
+        SettingsProto.parseFrom(input)
+    } catch (e: InvalidProtocolBufferException) {
+        throw CorruptionException("Cannot read settings proto.", e)
+    }
 
     override suspend fun writeTo(t: SettingsProto, output: OutputStream) {
         t.writeTo(output)

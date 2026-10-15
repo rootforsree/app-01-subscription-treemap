@@ -84,9 +84,8 @@ class TreemapLayoutTest {
         assertEquals(first, second)
     }
 
-    private fun overlaps(a: TreemapTile, b: TreemapTile): Boolean =
-        a.x < b.x + b.width - EPSILON &&
-            b.x < a.x + a.width - EPSILON &&
-            a.y < b.y + b.height - EPSILON &&
-            b.y < a.y + a.height - EPSILON
+    private fun overlaps(a: TreemapTile, b: TreemapTile): Boolean = a.x < b.x + b.width - EPSILON &&
+        b.x < a.x + a.width - EPSILON &&
+        a.y < b.y + b.height - EPSILON &&
+        b.y < a.y + a.height - EPSILON
 }

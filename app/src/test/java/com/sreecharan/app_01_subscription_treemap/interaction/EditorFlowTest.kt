@@ -32,10 +32,7 @@ class EditorFlowTest {
     @get:Rule
     val composeRule = createComposeRule()
 
-    private fun render(
-        onSave: (SubscriptionInput) -> Unit,
-        onDelete: (Long) -> Unit = {},
-    ) {
+    private fun render(onSave: (SubscriptionInput) -> Unit, onDelete: (Long) -> Unit = {}) {
         composeRule.setContent {
             AppTheme(darkTheme = false, hapticsEnabled = false) {
                 SubscriptionEditorContent(
