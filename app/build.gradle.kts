@@ -73,7 +73,9 @@ protobuf {
     generateProtoTasks {
         all().forEach { task ->
             task.builtins {
-                named("java") {
+                // Android adds no default outputs: create (not named) the java
+                // builtin, then enable lite codegen for the javalite runtime.
+                create("java") {
                     option("lite")
                 }
             }
