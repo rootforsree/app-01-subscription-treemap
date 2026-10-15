@@ -107,15 +107,15 @@ fun SubscriptionEditorContent(
 ) {
     val colors = LocalAppColors.current
     val sheetKey = initial?.id
-    var name by rememberSaveable(sheetKey) { mutableStateOf(initial?.name.orEmpty()) }
-    var amountText by rememberSaveable(sheetKey) { mutableStateOf(initial?.amount?.toString().orEmpty()) }
-    var notes by rememberSaveable(sheetKey) { mutableStateOf(initial?.notes.orEmpty()) }
+    var name by remember(sheetKey) { mutableStateOf(initial?.name.orEmpty()) }
+    var amountText by remember(sheetKey) { mutableStateOf(initial?.amount?.toString().orEmpty()) }
+    var notes by remember(sheetKey) { mutableStateOf(initial?.notes.orEmpty()) }
     var cycle by remember(sheetKey) { mutableStateOf(initial?.cycle ?: BillingCycle.MONTHLY) }
     var category by remember(sheetKey) { mutableStateOf(initial?.category ?: SubscriptionCategory.STREAMING) }
-    var nextBillingEpochDay by rememberSaveable(sheetKey) { mutableStateOf(initial?.nextBillingEpochDay) }
-    var nameError by rememberSaveable(sheetKey) { mutableStateOf(false) }
-    var amountError by rememberSaveable(sheetKey) { mutableStateOf(false) }
-    var showDeleteConfirm by rememberSaveable(sheetKey) { mutableStateOf(false) }
+    var nextBillingEpochDay by remember(sheetKey) { mutableStateOf(initial?.nextBillingEpochDay) }
+    var nameError by remember(sheetKey) { mutableStateOf(false) }
+    var amountError by remember(sheetKey) { mutableStateOf(false) }
+    var showDeleteConfirm by remember(sheetKey) { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
 
     Column(
