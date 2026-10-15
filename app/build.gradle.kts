@@ -9,6 +9,7 @@ plugins {
     // KSP again for Room (idempotent; the hilt convention already applies it).
     alias(libs.plugins.ksp)
     alias(libs.plugins.protobuf)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.android.junit5)
     alias(libs.plugins.baselineprofile)
