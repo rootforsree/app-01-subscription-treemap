@@ -58,7 +58,6 @@ class DetailSheetTest {
                     latestHike = null,
                     onEdit = onEdit,
                     onDelete = onDelete,
-                    onDismiss = {},
                 )
             }
         }

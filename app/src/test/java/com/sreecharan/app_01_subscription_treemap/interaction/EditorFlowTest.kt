@@ -46,7 +46,6 @@ class EditorFlowTest {
                     categories = SubscriptionCategory.entries,
                     onSave = onSave,
                     onDelete = onDelete,
-                    onDismiss = {},
                 )
             }
         }
